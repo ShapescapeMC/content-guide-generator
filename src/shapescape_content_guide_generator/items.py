@@ -149,6 +149,8 @@ def summarize_items(
 
     result: list[str] = []
     for item_path in filtered_paths:
+        if not item_path.is_file():
+            continue
         item = ItemProperties.from_path(item_path)
         if item is None:
             continue
@@ -218,10 +220,10 @@ def list_items(
     for item_path in filtered_paths:
         if not item_path.is_file():
             continue
+        item = ItemProperties.from_path(item_path)
         if player_facing == 'player_facing' and not item.player_facing:
             continue
         elif player_facing == 'non_player_facing' and item.player_facing:
             continue
-        item = ItemProperties.from_path(item_path)
         result.append(f'- {item.identifier}')
     return '\n'.join(result)
