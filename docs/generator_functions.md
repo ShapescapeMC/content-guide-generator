@@ -1,3 +1,10 @@
+<!-- doctree start -->
+- [About the documentation](/docs/README.md)
+- [Arguments Types](/docs/arguments_types.md)
+- [Custom properties](/docs/custom_properties.md)
+- [Generator functions](/docs/generator_functions.md)
+- [Tutorial](/docs/tutorial.md)
+<!-- doctree end -->
 # Generator functions
 
 Generator functions are the functions that you can use to insert text into the
@@ -20,6 +27,11 @@ The tag and the functions are replaced with the text that the function returns.
 > descriptive words that tell what arguments are (like glob pattern). If you
 > don't know what that means, you should read the
 > [Arguments Types](/docs/arguments_types.md)
+
+> **WARNING**
+>
+> Some of the functions use "custom entity properties" or "custom item properties".
+> You can read about them in the [Custom Properties](/docs/custom_properties.md)
 
 # `completion_guide()`
 Generates the completion guide for the map based on the completion guide
@@ -200,7 +212,7 @@ Output
 
 # `list_items()`, `summarize_items()` and `summarize_items_in_tables()`
 The functions that list entities using their identifiers. Some of them provide
-some additional information based on custom entity properties.
+some additional information based on custom item properties.
 
 - `list_items()` is the simplest function. It only lists the identifiers
 - `summarize_items()` writes summary in a formatted text form
@@ -223,7 +235,7 @@ some additional information based on custom entity properties.
   match the files to be excluded (even if they match the `search_patterns`).
   The value of this property is `null` by default. You don't have to specify
   it if you don't want to exclude any files.
- - `player_facing [OPTIONAL]` - a string that decides if player-facint,
+ - `player_facing [OPTIONAL]` - a string that decides if player-facing,
    non-player-facing or both types of items should be included. You can pick
    one of the following values: `"player_facing"`, `"non_player_facing"`,
    `"all"`. By default `"all"` is used which means that both types of items

@@ -1,3 +1,10 @@
+<!-- doctree start -->
+- [About the documentation](/docs/README.md)
+- [Arguments Types](/docs/arguments_types.md)
+- [Custom properties](/docs/custom_properties.md)
+- [Generator functions](/docs/generator_functions.md)
+- [Tutorial](/docs/tutorial.md)
+<!-- doctree end -->
 # Arguments Types
 This section describes the types of arguments that can be used in the
 generator functions.
@@ -16,3 +23,4 @@ generator functions.
   - `["hello", "world"]` - list with two strings
   - `["hello", 1, 2, 3]` - list with a string and three numberss
 - **null** - no value. Null is spelled as literal `null` (lowercase).
+- **bool** - boolean value. Boolean values are written as `true` or `false`.
