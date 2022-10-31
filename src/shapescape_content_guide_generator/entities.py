@@ -118,14 +118,14 @@ class EntityProperties(NamedTuple):
         if not category_walker.exists:
             errors.append(
                 "Missing category property "
-                "(assigned 'utility' category by default)")
+                "(assigned 'non_player_facing_utility' category by default)")
         else:
             category = category_walker.data
             if category not in ENTITY_CATEGORIES:
                 errors.append(
                     f"Invalid entity category: {category}.\n"
                     f"Expected one of: " + ", ".join(ENTITY_CATEGORIES) + "\n"
-                    f"(assigned 'utility' category by default)")
+                    f"(assigned 'non_player_facing_utility' category by default)")
                 category = "non_player_facing_utility"
             if clear_cgg_properties:
                 file_modified = True
@@ -167,7 +167,7 @@ class EntityProperties(NamedTuple):
                     [error.replace("\n", "\n\t  ") for error in errors]
                 )
             )
-        return EntityProperties(identifier, description, locations, category)
+        return EntityProperties(identifier, description, category, locations)
 
     def entity_summary(self):
         '''
