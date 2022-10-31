@@ -7,7 +7,7 @@ import re
 
 # Local imports
 from .errors import ContentGuideGenerationError, print_error
-from .globals import BP_PATH
+from .globals import AppConfig
 from .utils import filter_paths
 
 # Helper pattern for matching coordinates (int or float, format used by
@@ -152,7 +152,7 @@ def _parse_completion_guide_function(path: Path) -> CompletionGuidePart | None:
         )
         return None
     mcfunction_name = path.relative_to(
-        BP_PATH / 'functions').with_suffix('').as_posix()
+        AppConfig.get().bp_path / 'functions').with_suffix('').as_posix()
     return CompletionGuidePart(step_number, step_name, text, mcfunction_name)
 
 
@@ -168,7 +168,7 @@ def completion_guide(
     It takes the text from the top comments of the functions anc combines it
     together.
     '''
-    functions_path = BP_PATH / 'functions'
+    functions_path = AppConfig.get().bp_path / 'functions'
     filtered_paths = filter_paths(
         functions_path, search_patterns, exclude_patterns)
 
@@ -212,7 +212,7 @@ def warp(
         BP/functions folder.
     :returns: 
     '''
-    functions_path = BP_PATH / 'functions'
+    functions_path = AppConfig.get().bp_path / 'functions'
     filtered_paths = filter_paths(
         functions_path, search_patterns, exclude_patterns)
 

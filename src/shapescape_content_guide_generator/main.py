@@ -4,7 +4,7 @@ The main module with the script
 from typing import Callable
 from json import JSONDecodeError
 import json
-
+import argparse
 
 # Local imports
 from .errors import print_error
@@ -12,7 +12,7 @@ from .entities import list_entities, summarize_entities, summarize_entities_in_t
 from .items import summarize_items, summarize_items_in_tables, list_items
 from .functions import completion_guide, warp
 from .sound_definitions import sound_definitions
-from .globals import DATA_PATH
+from .globals import AppConfig
 
 
 def _split_func_parts(func: str) -> tuple[str, list] | None:
@@ -81,7 +81,7 @@ def insert(path: str):
     It's used to insert text from a file in content_guide_generator data into
     TEMPLATE.md
     '''
-    file_path = DATA_PATH / path
+    file_path = AppConfig.get().data_path / path
     return file_path.read_text()
 
 
@@ -102,7 +102,7 @@ FUNCTION_MAP: dict[str, Callable] = {
 
 def build_from_template() -> str:
     result: list[str] = []
-    template_path = DATA_PATH / 'TEMPLATE.md'
+    template_path = AppConfig.get().data_path / 'TEMPLATE.md'
     for template_part in _parse_template(template_path.read_text()):
         if isinstance(template_part, str):
             result.append(template_part)
@@ -114,9 +114,33 @@ def build_from_template() -> str:
 
 def main_regolith():
     result = build_from_template()
-    output_path = DATA_PATH / "OUTPUT.md"
+    output_path = AppConfig.get().data_path / "OUTPUT.md"
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(result, encoding='utf8')
 
 def main_commandline():
-    print("Hello world!")
+    parser = argparse.ArgumentParser(
+        prog='shapescape-content-guide-generator.exe',
+        description='A tool that generates content guides for Minecraft maps.')
+    parser.add_argument(
+        '-r', '--rp', type=str, help="The path to the resource pack",
+        required=True)
+    parser.add_argument(
+        '-b', '--bp', type=str, help="The path to the behavior pack",
+        required=True)
+    parser.add_argument(
+        '-d', '--data', type=str, help="The path to the data folder",
+        required=True)
+    parser.add_argument(
+        "-o", "--output", type=str, help="The path to the output file",
+        required=False, default="OUTPUT.md")
+    args = parser.parse_args()
+    app_config = AppConfig.get()
+    app_config.rp_path = args.rp
+    app_config.bp_path = args.bp
+    app_config.data_path = args.data
+    # Run the app
+    result = build_from_template()
+    output_path = AppConfig.get().data_path / args.output
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(result, encoding='utf8')

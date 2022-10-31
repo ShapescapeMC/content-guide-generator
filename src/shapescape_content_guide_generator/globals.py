@@ -1,21 +1,37 @@
 '''
 Global variables shared across the generator
 '''
+from __future__ import annotations
 from functools import cache
 from pathlib import Path
+from dataclasses import dataclass
 
 from sqlite_bedrock_packs import Database
 
-BP_PATH = Path("BP")
-RP_PATH = Path("RP")
-DATA_PATH = Path("data/content_guide_generator")
+@dataclass
+class AppConfig:
+    '''
+    AppConfig is a singleton with configuration of the app. It lets avoid
+    using global variables which I consider less readable and harder to
+    debug
+    '''
+    bp_path: Path
+    rp_path: Path
+    data_path: Path
 
+    @cache
+    @staticmethod
+    def get() -> AppConfig:
+        bp_path = Path("BP")
+        rp_path = Path("RP")
+        data_path = Path("data/content_guide_generator")
+        return AppConfig(bp_path, rp_path, data_path)
 @cache
 def get_db():
     '''
     Returns the database with info about the packs.
     '''
     db = Database.create()
-    db.load_rp(RP_PATH, include=['sound_definitions'])
-    # db.load_bp(BP_PATH)  # bp is not used
+    db.load_rp(AppConfig.get().rp_path, include=['sound_definitions'])
+    # db.load_bp(AppConfig.get().bp_path)  # bp is not used
     return db

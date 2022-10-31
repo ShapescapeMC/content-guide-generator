@@ -15,7 +15,7 @@ from sqlite_bedrock_packs.better_json_tools import load_jsonc, SKIP_LIST
 # Local imports
 from .utils import filter_paths
 from .errors import print_error
-from .globals import BP_PATH
+from .globals import AppConfig
 
 
 PlayerFacingSelector = Literal['player_facing', 'non_player_facing', 'all']
@@ -143,7 +143,7 @@ def summarize_items(
     :param exclude_patterns: the pattern that excludes the files even if they
         matched the search pattern.
     '''
-    item_paths = BP_PATH / 'items'
+    item_paths = AppConfig.get().bp_Path / 'items'
     filtered_paths = filter_paths(
         item_paths, search_patterns, exclude_patterns)
 
@@ -175,7 +175,7 @@ def summarize_items_in_tables(
     :param exclude_patterns: the pattern that excludes the files even if they
         matched the search pattern.
     '''
-    item_paths = BP_PATH / 'items'
+    item_paths = AppConfig.get().bp_Path / 'items'
     filtered_paths = filter_paths(
         item_paths, search_patterns, exclude_patterns)
     result: list[str] = [
@@ -210,12 +210,12 @@ def list_items(
         items that should be included in the result. If not specified, all
         items are included.
     '''
-    items_path = BP_PATH / 'items'
+    items_path = AppConfig.get().bp_Path / 'items'
     filtered_paths = filter_paths(
         items_path, search_patterns, exclude_patterns)
 
 
-    items_path = BP_PATH / 'items'
+    items_path = AppConfig.get().bp_Path / 'items'
     result: list[str] = []
     for item_path in filtered_paths:
         if not item_path.is_file():

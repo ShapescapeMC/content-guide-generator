@@ -1,7 +1,5 @@
-from sqlite_bedrock_packs import Database, EasyQuery
+from sqlite_bedrock_packs import EasyQuery
 from .globals import get_db
-RP_PATH = 'packs/RP'
-
 
 def _nice_sound_name(sound: str):
     parts = sound.split(".")
@@ -22,7 +20,3 @@ def sound_definitions() -> str:
         full = f"{nice_name} ({sound_definition.identifier})"
         result.append(f"- {full}")
     return "\n".join(result)
-
-
-if __name__ == "__main__":
-    main()

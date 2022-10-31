@@ -15,7 +15,7 @@ from sqlite_bedrock_packs.better_json_tools import load_jsonc, SKIP_LIST
 # Local imports
 from .utils import filter_paths
 from .errors import print_error
-from .globals import BP_PATH
+from .globals import AppConfig
 
 EntityCategory = Literal[
     "character", "trader", "non_player_facing_utility", "player_facing_utility",
@@ -53,7 +53,6 @@ Notes on the decision of using these categories:
 class EntityProperties(NamedTuple):
     identifier: str
     description: str
-    locations: list[str]
     category: EntityCategory
     locations: list[tuple[float, float, float]]
 
@@ -225,7 +224,7 @@ def summarize_entities(
         categories = ENTITY_CATEGORIES
     elif isinstance(categories, str):
         categories = [categories]
-    entities_path = BP_PATH / 'entities'
+    entities_path = AppConfig.get().bp_path / 'entities'
     filtered_paths = filter_paths(
         entities_path, search_patterns, exclude_patterns)
 
@@ -259,7 +258,7 @@ def summarize_entities_in_tables(
         categories = ENTITY_CATEGORIES
     elif isinstance(categories, str):
         categories = [categories]
-    entities_path = BP_PATH / 'entities'
+    entities_path = AppConfig.get().bp_path / 'entities'
     filtered_paths = filter_paths(
         entities_path, search_patterns, exclude_patterns)
 
@@ -298,12 +297,12 @@ def list_entities(
         categories = ENTITY_CATEGORIES
     elif isinstance(categories, str):
         categories = [categories]
-    entities_path = BP_PATH / 'entities'
+    entities_path = AppConfig.get().bp_path / 'entities'
     filtered_paths = filter_paths(
         entities_path, search_patterns, exclude_patterns)
 
 
-    entities_path = BP_PATH / 'entities'
+    entities_path = AppConfig.get().bp_path / 'entities'
     result: list[str] = []
     for entity_path in filtered_paths:
         if not entity_path.is_file():
