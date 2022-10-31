@@ -20,19 +20,19 @@ filter.
 
 **1.** Install the filter with command:
 ```
-regolith install github.com/ShapescapeMC/regolith-filters/conetent_guide_generator
+regolith install github.com/ShapescapeMC/regolith-filters/content_guide_generator
 ```
 
 If you have Regolith and Python 3.9+ properly installed, it should install
 the filter and create a virtual environment for it with the
-`conetent_guide_generator` installed and ready to use. You don't need to install
-`conetent_guide_generator` manually on your main Python environment.
+`content_guide_generator` installed and ready to use. You don't need to install
+`content_guide_generator` manually on your main Python environment.
 
 **2.** Add the filter to the `filters` list in the `config.json` file of the Regolith
 project:
 ```json
                     {
-                        "filter": "conetent_guide_generator"
+                        "filter": "content_guide_generator"
                     },
 ```
 **3.** Running the generator should now build the `OUTPUT.md` file in the
