@@ -46,7 +46,7 @@ filters data directory (`filters_data/content_guide_generator/OUTPUT.md`).
 > reason the file is missing, you have to create it manually.
 > 
 > You can read more about the template file below in the
-> [Writing the TEMPLATE.md file](/docs/tutorial.md#writing-the-template.md-file) section.
+> [Writing the TEMPLATE.md file](/docs/tutorial.md#writing-the-templatemd-file) section.
 
 
 ## Using the generator without Regolith (not recommended)
@@ -112,7 +112,7 @@ shapescape-content-guide-generator.exe -r "path/to/rp" -b "path/to/bp" -d "path/
 >
 > The `data` folder must have the same structure as in Regolith. This means that it has to have
 > the `TEMPLATE.md` file. You can read about it in the
-> [next section](/docs/tutorial.md#writing-the-template.md-file).
+> [next section](/docs/tutorial.md#writing-the-templatemd-file).
 
 ## Writing the `TEMPLATE.md` file
 
