@@ -4,6 +4,7 @@ The main module with the script
 from typing import Callable
 from json import JSONDecodeError
 import json
+from pathlib import Path
 import argparse
 
 # Local imports
@@ -123,16 +124,16 @@ def main_commandline():
         prog='shapescape-content-guide-generator.exe',
         description='A tool that generates content guides for Minecraft maps.')
     parser.add_argument(
-        '-r', '--rp', type=str, help="The path to the resource pack",
+        '-r', '--rp', type=Path, help="The path to the resource pack",
         required=True)
     parser.add_argument(
-        '-b', '--bp', type=str, help="The path to the behavior pack",
+        '-b', '--bp', type=Path, help="The path to the behavior pack",
         required=True)
     parser.add_argument(
-        '-d', '--data', type=str, help="The path to the data folder",
+        '-d', '--data', type=Path, help="The path to the data folder",
         required=True)
     parser.add_argument(
-        "-o", "--output", type=str, help="The path to the output file",
+        "-o", "--output", type=Path, help="The path to the output file",
         required=False, default="OUTPUT.md")
     args = parser.parse_args()
     app_config = AppConfig.get()
