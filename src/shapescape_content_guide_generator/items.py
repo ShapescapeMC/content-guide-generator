@@ -143,7 +143,7 @@ def summarize_items(
     :param exclude_patterns: the pattern that excludes the files even if they
         matched the search pattern.
     '''
-    item_paths = AppConfig.get().bp_Path / 'items'
+    item_paths = AppConfig.get().bp_path / 'items'
     filtered_paths = filter_paths(
         item_paths, search_patterns, exclude_patterns)
 
@@ -175,7 +175,7 @@ def summarize_items_in_tables(
     :param exclude_patterns: the pattern that excludes the files even if they
         matched the search pattern.
     '''
-    item_paths = AppConfig.get().bp_Path / 'items'
+    item_paths = AppConfig.get().bp_path / 'items'
     filtered_paths = filter_paths(
         item_paths, search_patterns, exclude_patterns)
     result: list[str] = [
@@ -210,12 +210,12 @@ def list_items(
         items that should be included in the result. If not specified, all
         items are included.
     '''
-    items_path = AppConfig.get().bp_Path / 'items'
+    items_path = AppConfig.get().bp_path / 'items'
     filtered_paths = filter_paths(
         items_path, search_patterns, exclude_patterns)
 
 
-    items_path = AppConfig.get().bp_Path / 'items'
+    items_path = AppConfig.get().bp_path / 'items'
     result: list[str] = []
     for item_path in filtered_paths:
         if not item_path.is_file():
