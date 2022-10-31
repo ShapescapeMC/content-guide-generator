@@ -125,6 +125,12 @@ section.
 You can find a good template file here: 
 https://github.com/ShapescapeMC/regolith-filters/blob/master/content_guide_generator/data/TEMPLATE.md
 
+> **WARNING**
+>
+> Note that this file has references to other files. It uses the `:generate: insert()` function
+> which inserts the content of one `md` file into another. If you want to use this template, you
+> have to copy entire `data` folder not just the `TEMPLATE.md` file.
+
 If you're using Regolith, this file will be automatically created during the installation
 of the filter. If you're using the commandline tool, you have to create this file
 manually in the path that you'll specified in the `-d` argument.
