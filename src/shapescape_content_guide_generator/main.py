@@ -83,7 +83,11 @@ def insert(path: str):
     TEMPLATE.md
     '''
     file_path = AppConfig.get().data_path / path
-    return file_path.read_text()
+    try:
+        return file_path.read_text()
+    except FileNotFoundError:
+        print_error(f"File not found: {file_path}")
+    return ''
 
 
 # PARSING THE TEMPLATE
