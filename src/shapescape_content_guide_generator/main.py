@@ -84,7 +84,7 @@ def insert(path: str):
     '''
     file_path = AppConfig.get().data_path / path
     try:
-        return file_path.read_text()
+        return file_path.read_text(encoding='utf8')
     except FileNotFoundError:
         print_error(f"File not found: {file_path}")
     return ''
@@ -108,7 +108,7 @@ FUNCTION_MAP: dict[str, Callable] = {
 def build_from_template() -> str:
     result: list[str] = []
     template_path = AppConfig.get().data_path / 'TEMPLATE.md'
-    for template_part in _parse_template(template_path.read_text()):
+    for template_part in _parse_template(template_path.read_text(encoding='utf8')):
         if isinstance(template_part, str):
             result.append(template_part)
         else:  # tuple[str, list]

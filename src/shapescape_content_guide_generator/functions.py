@@ -142,7 +142,7 @@ def _parse_completion_guide_function(path: Path) -> CompletionGuidePart | None:
         print_error(INVALID_FORMAT_ERROR)
         return None
     step_name = ' '.join(split_name[1:]).capitalize()
-    doc_comment, _ = _doc_comment_split(path.read_text())
+    doc_comment, _ = _doc_comment_split(path.read_text(encoding='utf8'))
     text = _get_text_from_comment(doc_comment)
     if text is None:
         print_error(
@@ -224,7 +224,7 @@ def warp(
             " warp() function.\n"
         )
         # name = " ".join(path.stem.split("_")).capitalize()
-        doc_comment, commands = _doc_comment_split(path.read_text())
+        doc_comment, commands = _doc_comment_split(path.read_text(encoding='utf8'))
         doc_comment = _get_text_from_comment(doc_comment)
         if doc_comment is None:
             print_error(error_header + "\t- The file has no doc comment.")
