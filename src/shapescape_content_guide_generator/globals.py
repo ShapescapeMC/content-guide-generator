@@ -33,5 +33,8 @@ def get_db():
     '''
     db = Database.create()
     db.load_rp(AppConfig.get().rp_path, include=['sound_definitions'])
-    # db.load_bp(AppConfig.get().bp_path)  # bp is not used
+    db.load_bp(
+        AppConfig.get().bp_path,
+        include=['entities', 'bp_items', 'loot_tables', 'trade_tables']
+    )
     return db

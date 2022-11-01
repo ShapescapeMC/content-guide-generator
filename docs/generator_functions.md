@@ -215,8 +215,11 @@ The functions that list entities using their identifiers. Some of them provide
 some additional information based on custom item properties.
 
 - `list_items()` is the simplest function. It only lists the identifiers
-- `summarize_items()` writes summary in a formatted text form
 - `summarize_items_in_tables()` writes summary in a table form
+- `summarize_items()` writes summary in a formatted text form. This format is
+   the most detailed one. It contains the list of entities that drop the item,
+   a list of entities that trade using this item and a list of recipes that
+   create this item.
 
 ## Syntax
 ```
@@ -268,9 +271,24 @@ Output
 > ### shapescape:fire_extinguisher
 > Fire extinquisher weapon. Freezes enemies. It can be purchased from the weapon shop.
 > 
-> ### shapescape:flame_thrower
-> The Flameinator weapon. Sets enemies on fire. It can be purchased from the weapon shop.
-> ...
+> ### shapescape:dragon_pants
+> No, they're not made out of dragon skin, but they have a very cool dragon pattern on them.
+> #### **Crafting recipe:**
+> **Ingredients:**
+> - minecraft:bone as N
+> - minecraft:dragon_breath as D
+> 
+> **Pattern:**
+> ```
+> NNN
+> NDN
+> N N
+> ```
+> 
+> #### **Dropped by:**
+> - shapescape:skeleton_dummy
+> #### **Traded by:**
+> - shapescape:armor_trader1
 
 **Example summarize_items_in_tables()**
 

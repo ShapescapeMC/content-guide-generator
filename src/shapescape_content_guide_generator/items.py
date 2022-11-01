@@ -3,20 +3,25 @@ This module contains logic used for gathering and presenting the information
 about items.
 '''
 from __future__ import annotations
+from collections import defaultdict
 
-from typing import NamedTuple, Literal
+from typing import NamedTuple, Literal, cast
 from pathlib import Path
 from functools import cache
 from json import JSONDecodeError
 import json
 
 from sqlite_bedrock_packs.better_json_tools import load_jsonc, SKIP_LIST
+from sqlite_bedrock_packs import EasyQuery
+from sqlite_bedrock_packs.wrappers import BpItem, Entity, TradeTable
 
 # Local imports
 from .utils import filter_paths
 from .errors import print_error
-from .globals import AppConfig
-
+from .globals import AppConfig, get_db
+from .recipes import (
+    load_recipe, InvalidRecipeException, RecipeCrafting, RecipeFurnace,
+    RecipeBrewing)
 
 PlayerFacingSelector = Literal['player_facing', 'non_player_facing', 'all']
 '''
@@ -28,6 +33,9 @@ class ItemProperties(NamedTuple):
     identifier: str
     description: str
     player_facing: bool
+    recipe_patterns: list[str]
+    dropping_entities: list[str]  # Entities that drop this item
+    trading_entities: list[str]  # Entities that drop this item
 
     @cache
     @staticmethod
@@ -57,12 +65,18 @@ class ItemProperties(NamedTuple):
         # List of errors to print at the end of the function
         errors: list[str] = []
 
+        # Optional list with the patterns of the recipes
+        recipe_patterns: list[str] = []
+
         root_walker = data / 'minecraft:item' / 'description'
         # Identifier
         identifier = (root_walker / 'identifier').data
         if not isinstance(identifier, str):
             errors.append("Missing item identifier")
             return None
+        # Dropping and trading entities
+        dropping_entities = list_dropping_entities(identifier)
+        trading_entities = list_trading_entities(identifier)
 
         # Description
         description_walker = root_walker / 'description'
@@ -84,11 +98,18 @@ class ItemProperties(NamedTuple):
                 del description_walker.parent.data['description']
         # Player facing
         player_facing_walker = root_walker / 'player_facing'
-        player_facing: bool = True
+        player_facing: bool = False
         if not player_facing_walker.exists:
-            errors.append(
-                "Missing player_facing property "
-                "(assigned True by default)")
+            craftable_items = _list_craftable_items()
+            if identifier in craftable_items:
+                recipe_patterns.append("\n\n".join(craftable_items[identifier]))
+                player_facing = True
+            elif len(dropping_entities) > 0 or len(trading_entities) > 0:
+                player_facing = True
+            else:
+                errors.append(
+                    "Unable to determine player_facing property "
+                    "(assigned False by default)")
         else:
             if not isinstance(player_facing_walker.data, bool):
                 errors.append(
@@ -110,7 +131,10 @@ class ItemProperties(NamedTuple):
                 "to generate summary of the ITEM:\n\t- " +
                 "\n\t- ".join(errors)
             )
-        return ItemProperties(identifier, description, player_facing)
+        return ItemProperties(
+            identifier, description, player_facing, recipe_patterns,
+            dropping_entities=dropping_entities,
+            trading_entities=trading_entities)
 
     def item_summary(self):
         '''
@@ -119,6 +143,15 @@ class ItemProperties(NamedTuple):
         result: list[str] = [f"### {self.identifier}"]
         if self.description != "":
             result.append(f"{self.description}")
+
+        if len(self.recipe_patterns) > 0:
+            result.extend(self.recipe_patterns)
+        if len(self.dropping_entities) > 0:
+            result.append("#### **Dropped by:**")
+            result.extend([f'- {e}' for e in self.dropping_entities])
+        if len(self.trading_entities) > 0:
+            result.append("#### **Traded by:**")
+            result.extend([f'- {e}' for e in self.trading_entities])
         return '\n'.join(result) + "\n"
 
     def item_table_summary(self):
@@ -227,3 +260,79 @@ def list_items(
             continue
         result.append(f'- {item.identifier}')
     return '\n'.join(result)
+
+@cache
+def _list_craftable_items() -> dict[str, list[str]]:
+    '''
+    Lists all of the items that can be crafted and their recipes in as string
+    form using the "recipes.py" script which is a part of the
+    Recipe Image Generator
+    '''
+    recipes_path = AppConfig.get().bp_path / 'recipes'
+    result: dict[str, list[str]] = defaultdict(list)
+    for recipe_path in recipes_path.rglob("*.json"):
+        try:
+            recipe = load_recipe(recipe_path)
+        except InvalidRecipeException:
+            print_error(
+                f"Failed to load recipe form: "
+                f"{recipe_path.as_posix()}")
+            continue
+        if isinstance(recipe, RecipeCrafting):
+            recipe_text = (
+                f"#### **Crafting recipe:**\n"
+                "**Ingredients:**\n")
+            for k, v in recipe.keys.items():
+                recipe_text += f"- {v.item} as {k}\n"
+            recipe_text += "\n**Pattern:**\n```\n"
+            recipe_text += "\n".join(recipe.pattern) + "\n```\n"
+            result[recipe.result.item].append(recipe_text)
+        if isinstance(recipe, RecipeFurnace):
+            recipe_text = (
+                "#### **Furnace recipe:**\n"
+                f"- Input: {recipe.input.item}\n"
+                f"- Output: {recipe.output.item}\n"
+            )
+            result[recipe.output.item].append(recipe_text)
+        if isinstance(recipe, RecipeBrewing):
+            recipe_text = (
+                "#### **Brewing recipe:**\n"
+                f"- Input: {recipe.input.item}\n"
+                f"- Reagent: {recipe.reagent.item}\n"
+                f"- Output: {recipe.output.item}\n"
+            )
+            result[recipe.output.item].append(recipe_text)
+    return dict(result)
+
+def list_dropping_entities(item_name: str) -> list[str]:
+    '''
+    Lists the identifiers of the entities that drop the specified item.
+    '''
+    
+    db = get_db()
+    result: list[str] = []
+    q = EasyQuery.build(
+        db, 'BpItem', 'LootTable', 'Entity', 
+        where=[f"BpItem.identifier = '{item_name}'"])
+    for _, _, entity in q.yield_wrappers():
+        entity = cast(Entity, entity)
+        if entity.identifier is None:
+            continue
+        result.append(entity.identifier)
+    return result
+
+def list_trading_entities(item_name: str) -> list[str]:
+    '''
+    Lists the identifiers of the entities that trade the specified item.
+    '''
+    db = get_db()
+    result: list[str] = []
+    q = EasyQuery.build(
+        db, 'BpItem', 'TradeTable', 'Entity',
+        where=[f"BpItem.identifier = '{item_name}'"])
+    for _, _, entity in q.yield_wrappers():
+        entity = cast(Entity, entity)
+        if entity.identifier is None:
+            continue
+        result.append(entity.identifier)
+    return result
