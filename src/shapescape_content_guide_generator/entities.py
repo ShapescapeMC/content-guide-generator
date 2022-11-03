@@ -156,7 +156,7 @@ class EntityProperties(NamedTuple):
         else:
             errors.append("Missing locations property")
         if file_modified:
-            with open(path, 'w', encodint='utf8') as f:
+            with open(path, 'w', encoding='utf8') as f:
                 json.dump(data.data, f, indent='\t')
         if len(errors) > 0:
             print_error(
