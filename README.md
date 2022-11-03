@@ -6,6 +6,10 @@ You can read more about this tool in the [documentation](docs/README.md)
 
 
 # Changelog
+## 1.1.1
+Fixed a typo "encodint" -> "encoding". Fixes the filters ability to update the
+entity files.
+
 ## 1.1.0
 Item report generator improvements:
 - The default item player-facing value was changed to False (items are assumed to be non-player facing)
