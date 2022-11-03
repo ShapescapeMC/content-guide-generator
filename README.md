@@ -6,6 +6,9 @@ You can read more about this tool in the [documentation](docs/README.md)
 
 
 # Changelog
+## 1.1.2
+Added `"vehicle"` entity category.
+
 ## 1.1.1
 Fixed a typo "encodint" -> "encoding". Fixes the filters ability to update the
 entity files.

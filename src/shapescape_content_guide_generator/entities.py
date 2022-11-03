@@ -19,11 +19,11 @@ from .globals import AppConfig
 
 EntityCategory = Literal[
     "character", "trader", "non_player_facing_utility", "player_facing_utility",
-    "projectile", "creature", "decoration", "interactive_entity"]
+    "projectile", "creature", "decoration", "interactive_entity", "vehicle"]
 
 ENTITY_CATEGORIES = (
     "character", "trader", "non_player_facing_utility", "player_facing_utility",
-    "projectile", "creature", "decoration", "interactive_entity")
+    "projectile", "creature", "decoration", "interactive_entity", "vehicle")
 '''
 Notes on the decision of using these categories:
 - character & trader are a thing required by content guide template
@@ -47,6 +47,7 @@ Notes on the decision of using these categories:
 - "interactive_entity" - entities that can be interacted with like shops, menus
    etc. The non-interactive parts of the shops should also be added to this
    category (as a part of a bigger thing).
+- "vehicle" - vehicles
 '''
 
 

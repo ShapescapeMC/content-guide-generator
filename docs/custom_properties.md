@@ -82,6 +82,7 @@ Category is a string that puts the entity into one of the following groups:
         after spawning.
     - an automatic turret or other traps
 - `"projectile"` - every entity that uses "minecraft:projectile" component
+- `"vehicle"` - inanimate entities that the player can ride on.
 - `"creature"` - every living entity that doesn't fit into character or
     trader category (mobs and monsters).
 - `"decoration"` - every entity used purely for visual purposes (e.g.
