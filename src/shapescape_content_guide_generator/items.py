@@ -169,7 +169,7 @@ class ItemProperties(NamedTuple):
 
         root_walker = data / 'minecraft:entity' / 'description'
         # Check if the spawn egg even exists
-        spawn_egg_walker = root_walker / 'spawnable'
+        spawn_egg_walker = root_walker / 'is_spawnable'
         
         if isinstance(spawn_egg_walker.data, bool):
             has_spawn_egg = spawn_egg_walker.data
@@ -204,6 +204,8 @@ class ItemProperties(NamedTuple):
             errors.append("Missing entity identifier")
             return None
         identifier = f"{identifier}_spawn_egg"
+        if identifier.startswith("minecraft:"):
+            return None  # Silently ignore vanilla spawn eggs
 
         # Dropping and trading entities
         dropping_entities = list_dropping_entities(identifier)
@@ -213,7 +215,7 @@ class ItemProperties(NamedTuple):
         description_walker = root_walker / 'spawn_egg_description'
         description: str = ""
         if not description_walker.exists:
-            errors.append("Missing spawn egg description")
+            errors.append("Missing spawn egg description.")
         else:
             description_data: list[str] = []
             for d in description_walker // SKIP_LIST:
@@ -260,7 +262,7 @@ class ItemProperties(NamedTuple):
         if len(errors) > 0:
             print_error(
                 f"File {path.as_posix()} is missing properties "
-                "to generate summary of the ITEM:\n\t- " +
+                "to generate summary of the SPAWN EGG:\n\t- " +
                 "\n\t- ".join(errors)
             )
         return ItemProperties(
@@ -389,7 +391,6 @@ def list_items(
         result.append(f'- {item.identifier}')
     return '\n'.join(result)
 
-
 def summarize_spawn_eggs(
         search_patterns: str | list[str],
         exclude_patterns: str | list[str] | None = None,
@@ -485,7 +486,6 @@ def list_spawn_eggs(
             continue
         result.append(f'- {item.identifier}')
     return '\n'.join(result)
-
 
 @cache
 def _list_craftable_items() -> dict[str, list[str]]:
