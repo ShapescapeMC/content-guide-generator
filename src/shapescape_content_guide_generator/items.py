@@ -114,12 +114,144 @@ class ItemProperties(NamedTuple):
             if not isinstance(player_facing_walker.data, bool):
                 errors.append(
                     "Invalid player_facing property "
-                    "(assigned True by default)")
+                    "(assigned False by default)")
             else:
                 player_facing = player_facing_walker.data
             if clear_cgg_properties:
                 file_modified = True
                 del root_walker.data['player_facing']
+        # Save file with removed custom properties
+        if file_modified:
+            with open(path, 'w') as f:
+                json.dump(data.data, f, indent='\t')
+        # Print errors
+        if len(errors) > 0:
+            print_error(
+                f"File {path.as_posix()} is missing properties "
+                "to generate summary of the ITEM:\n\t- " +
+                "\n\t- ".join(errors)
+            )
+        return ItemProperties(
+            identifier, description, player_facing, recipe_patterns,
+            dropping_entities=dropping_entities,
+            trading_entities=trading_entities)
+
+    @cache
+    @staticmethod
+    def from_entity_path(path: Path, clear_cgg_properties: bool = True) -> ItemProperties | None:
+        '''
+        Loads the item (spawn egg) properties from an entity file. The properties are
+        later reused by various functions to generate the content guide. If
+        file fails to load or is missing some important data, it returns None.
+
+        :param path: The path to the entity file.
+        :param clear_cgg_properties: If True, the function will clear the
+            custom properties used by the content guide generator after reading
+            them.
+        '''
+        # Load file
+        try:
+            data = load_jsonc(path)
+        except JSONDecodeError:
+            print_error(
+                f"Unable to load entity file as JSON\n"
+                f"\tPath: {path.as_posix()}")
+            return None
+
+        file_modified  = False  # tracks if it has custom json to delete
+        has_spawn_egg = False  # whether the entity has a spawn egg
+
+        # List of errors to print at the end of the function
+        errors: list[str] = []
+
+        # Optional list with the patterns of the recipes
+        recipe_patterns: list[str] = []
+
+        root_walker = data / 'minecraft:entity' / 'description'
+        # Check if the spawn egg even exists
+        spawn_egg_walker = root_walker / 'spawnable'
+        
+        if isinstance(spawn_egg_walker.data, bool):
+            has_spawn_egg = spawn_egg_walker.data
+        elif spawn_egg_walker.exists:
+            # By default it's false, if it exists and is not bool, it's invalid
+            errors.append("Invalid spawnable property (should be a bool)")
+        # If not spawnable, return None
+        if not has_spawn_egg:
+            # Clear custom properties if there are any
+            if clear_cgg_properties:
+                if (root_walker / "spawn_egg_description").exists:
+                    del root_walker.data["spawn_egg_description"]
+                    file_modified = True
+                if (root_walker / "spawn_egg_player_facing").exists:
+                    del root_walker.data["spawn_egg_player_facing"]
+                    file_modified = True
+            # Save file with removed custom properties
+            if file_modified:
+                with open(path, 'w') as f:
+                    json.dump(data.data, f, indent='\t')
+            # Print errors
+            if len(errors) > 0:
+                print_error(
+                    f"File {path.as_posix()} is missing properties "
+                    "to generate summary of the SPAWN EGG:\n\t- " +
+                    "\n\t- ".join(errors)
+                )
+            return None
+        # Identifier
+        identifier = (root_walker / 'identifier').data
+        if not isinstance(identifier, str):
+            errors.append("Missing entity identifier")
+            return None
+        identifier = f"{identifier}_spawn_egg"
+
+        # Dropping and trading entities
+        dropping_entities = list_dropping_entities(identifier)
+        trading_entities = list_trading_entities(identifier)
+
+        # Description
+        description_walker = root_walker / 'spawn_egg_description'
+        description: str = ""
+        if not description_walker.exists:
+            errors.append("Missing spawn egg description")
+        else:
+            description_data: list[str] = []
+            for d in description_walker // SKIP_LIST:
+                if not isinstance(d.data, str):
+                    errors.append(
+                        "Invalid spawn egg description (should be string or "
+                        "list of strings)")
+                    break
+                description_data.append(d.data)
+            description = '\n'.join(description_data)
+            if clear_cgg_properties:
+                file_modified = True
+                del description_walker.parent.data['spawn_egg_description']
+        # Player facing
+        player_facing_walker = root_walker / 'spawn_egg_player_facing'
+        player_facing: bool = False
+        if not player_facing_walker.exists:
+            craftable_items = _list_craftable_items()
+            if identifier in craftable_items:
+                recipe_patterns.append(
+                    "\n\n".join(craftable_items[identifier]))
+                player_facing = True
+            elif len(dropping_entities) > 0 or len(trading_entities) > 0:
+                player_facing = True
+            else:
+                errors.append(
+                    "Unable to determine player_facing property of the spawn "
+                    "egg (assigned False by default)")
+        else:
+            if not isinstance(player_facing_walker.data, bool):
+                errors.append(
+                    "Invalid player_facing property of the spawn egg "
+                    "(assigned False by default)")
+            else:
+                player_facing = player_facing_walker.data
+            if clear_cgg_properties:
+                file_modified = True
+                del root_walker.data['spawn_egg_player_facing']
         # Save file with removed custom properties
         if file_modified:
             with open(path, 'w') as f:
@@ -239,16 +371,12 @@ def list_items(
 
     :param search_pattern: glob pattern used to find the item files. The
         pattern must be relative to behavior pack items folder.
-    :param categories: optional parameter that specifies the categories of the
-        items that should be included in the result. If not specified, all
-        items are included.
     '''
     items_path = AppConfig.get().bp_path / 'items'
     filtered_paths = filter_paths(
         items_path, search_patterns, exclude_patterns)
 
 
-    items_path = AppConfig.get().bp_path / 'items'
     result: list[str] = []
     for item_path in filtered_paths:
         if not item_path.is_file():
@@ -260,6 +388,104 @@ def list_items(
             continue
         result.append(f'- {item.identifier}')
     return '\n'.join(result)
+
+
+def summarize_spawn_eggs(
+        search_patterns: str | list[str],
+        exclude_patterns: str | list[str] | None = None,
+        player_facing: PlayerFacingSelector = 'all',
+) -> str:
+    '''
+    Returns the summaries of all spawn_eggs from paths that match the search
+    pattern.
+
+    :param search_pattern: glob pattern used to find the entity files. The
+        pattern must be relative to behavior pack entities folder.
+    :param exclude_patterns: the pattern that excludes the files even if they
+        matched the search pattern.
+    '''
+    item_paths = AppConfig.get().bp_path / 'entities'
+    filtered_paths = filter_paths(
+        item_paths, search_patterns, exclude_patterns)
+
+    result: list[str] = []
+    for item_path in filtered_paths:
+        if not item_path.is_file():
+            continue
+        item = ItemProperties.from_entity_path(item_path)
+        if item is None:
+            continue
+        if player_facing == 'player_facing' and not item.player_facing:
+            continue
+        elif player_facing == 'non_player_facing' and item.player_facing:
+            continue
+        result.append(item.item_summary())
+    return '\n'.join(result)
+
+def summarize_spawn_eggs_in_tables(
+        search_patterns: str | list[str],
+        exclude_patterns: str | list[str] | None = None,
+        player_facing: PlayerFacingSelector = 'all',
+) -> str:
+    '''
+    Returns the summaries of all spawn_eggs from paths that match the search
+    pattern.
+
+    :param search_pattern: glob pattern used to find the entity files. The
+        pattern must be relative to behavior pack entities folder.
+    :param exclude_patterns: the pattern that excludes the files even if they
+        matched the search pattern.
+    '''
+    item_paths = AppConfig.get().bp_path / 'items'
+    filtered_paths = filter_paths(
+        item_paths, search_patterns, exclude_patterns)
+    result: list[str] = [
+        "| Item | Description |",
+        "|------|-------------|"
+    ]
+    for item_path in filtered_paths:
+        if not item_path.is_file():
+            continue
+        item = ItemProperties.from_entity_path(item_path)
+        if item is None:
+            continue
+        if player_facing == 'player_facing' and not item.player_facing:
+            continue
+        elif player_facing == 'non_player_facing' and item.player_facing:
+            continue
+        result.append(item.item_table_summary())
+    return '\n'.join(result)
+
+def list_spawn_eggs(
+        search_patterns: str | list[str],
+        exclude_patterns: str | list[str] | None = None,
+        player_facing: PlayerFacingSelector = 'all',
+) -> str:
+    '''
+    Simplified version of summarize_spawn_eggs that returns only the list of
+    item identifiers.
+
+    :param search_pattern: glob pattern used to find the entity files. The
+        pattern must be relative to behavior pack entities folder.
+    :param exclude_patterns: the pattern that excludes the files even if they
+        matched the search pattern.
+    '''
+    items_path = AppConfig.get().bp_path / 'entities'
+    filtered_paths = filter_paths(
+        items_path, search_patterns, exclude_patterns)
+
+    result: list[str] = []
+    for item_path in filtered_paths:
+        if not item_path.is_file():
+            continue
+        item = ItemProperties.from_entity_path(item_path)
+        if player_facing == 'player_facing' and not item.player_facing:
+            continue
+        elif player_facing == 'non_player_facing' and item.player_facing:
+            continue
+        result.append(f'- {item.identifier}')
+    return '\n'.join(result)
+
 
 @cache
 def _list_craftable_items() -> dict[str, list[str]]:

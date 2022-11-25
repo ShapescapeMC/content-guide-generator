@@ -12,7 +12,7 @@ files of the project to control the generation process.
 ## Behavior Pack Entity Files
 ### `description`
 
-- Path: `BP/entities/environment/*.json`
+- Path: `BP/entities/*.json`
 - JSON Path: `["minecraft:entity"].description.description`
 
 Description is a string or a list of strings that describes the entity in
@@ -35,7 +35,7 @@ line of the description
 
 
 ### `locations`
-- Path: `BP/entities/environment/*.json`
+- Path: `BP/entities/*.json`
 - JSON Path: `["minecraft:entity"].description.locations`
 
 Locations is a list of locations that the entity can be found in. Locations
@@ -56,7 +56,7 @@ should be an empty list (`[]`).
 
 
 ### `category`
-- Path: `BP/entities/environment/*.json`
+- Path: `BP/entities/*.json`
 - JSON Path: `["minecraft:entity"].description.category`
 
 Category is a string that puts the entity into one of the following groups:
@@ -89,6 +89,23 @@ Category is a string that puts the entity into one of the following groups:
     furniture)
 - `"interactive_entity"` - inanimate entities that you spawn on the world to be
     interacted with (e.g. entity based menus, stationary shop entities, etc.)
+
+## `spawn_egg_description`
+
+- Path: `BP/entities/*.json`
+- JSON Path: `["minecraft:entity"].description.spawn_egg_description`
+
+Description of the spawn egg. It's analogous to the `description` property
+of the item. It's used in the functions that describe spawn eggs.
+
+## `spawn_egg_player_facing`
+
+- Path: `BP/entities/*.json`
+- JSON Path: `["minecraft:entity"].description.spawn_egg_player_facing`
+
+A boolean that tells if the spawn egg is player facing or not. It's analogous
+to the `player_facing` property of the item. It's used for the functions
+that describe spawn eggs.
 
 ## Behavior Pack Item Files
 ### `description`

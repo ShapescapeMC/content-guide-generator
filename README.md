@@ -6,6 +6,10 @@ You can read more about this tool in the [documentation](docs/README.md)
 
 
 # Changelog
+## 1.2.0
+Added new functions for summarizing spawn eggs. They are analogous to the
+functions for summarizing items.
+
 ## 1.1.2
 Added `"vehicle"` entity category.
 
