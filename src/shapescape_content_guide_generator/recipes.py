@@ -88,6 +88,17 @@ class RecipeKey:
                 "a ActorIdWildcard")
         return recipe_key_data
 
+    def get_true_item_name(self) -> str:
+        '''
+        Returns the true name of the item. In most cases it's the same as
+        self.item, but for spawn eggs it's
+        '<namespace>:<entity_name>_spawn_egg'
+        '''
+        if not isinstance(self.data, ActorIdWildcard):
+            return self.item
+        else:
+            return self.data.actor_name + "_spawn_egg"
+
 def load_recipe_name(recipe_path: Path) -> str:
     '''
     Simple function for loading just the name of the recipe from the file.

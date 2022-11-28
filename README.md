@@ -6,6 +6,10 @@ You can read more about this tool in the [documentation](docs/README.md)
 
 
 # Changelog
+## 1.3.0
+Spawn egg summary can detect items that use the `query.get_actor_info_id`
+function to assign the spawn egg to an entity.
+
 ## 1.2.0
 Added new functions for summarizing spawn eggs. They are analogous to the
 functions for summarizing items.

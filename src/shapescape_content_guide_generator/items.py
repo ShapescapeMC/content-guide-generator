@@ -512,14 +512,14 @@ def _list_craftable_items() -> dict[str, list[str]]:
                 recipe_text += f"- {v.item} as {k}\n"
             recipe_text += "\n**Pattern:**\n```\n"
             recipe_text += "\n".join(recipe.pattern) + "\n```\n"
-            result[recipe.result.item].append(recipe_text)
+            result[recipe.result.get_true_item_name()].append(recipe_text)
         if isinstance(recipe, RecipeFurnace):
             recipe_text = (
                 "#### **Furnace recipe:**\n"
                 f"- Input: {recipe.input.item}\n"
                 f"- Output: {recipe.output.item}\n"
             )
-            result[recipe.output.item].append(recipe_text)
+            result[recipe.output.get_true_item_name()].append(recipe_text)
         if isinstance(recipe, RecipeBrewing):
             recipe_text = (
                 "#### **Brewing recipe:**\n"
@@ -527,7 +527,7 @@ def _list_craftable_items() -> dict[str, list[str]]:
                 f"- Reagent: {recipe.reagent.item}\n"
                 f"- Output: {recipe.output.item}\n"
             )
-            result[recipe.output.item].append(recipe_text)
+            result[recipe.output.get_true_item_name()].append(recipe_text)
     return dict(result)
 
 def list_dropping_entities(item_name: str) -> list[str]:
