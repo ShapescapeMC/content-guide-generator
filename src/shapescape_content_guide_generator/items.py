@@ -270,6 +270,105 @@ class ItemProperties(NamedTuple):
             dropping_entities=dropping_entities,
             trading_entities=trading_entities)
 
+    @cache
+    @staticmethod
+    def from_block_path(path: Path, clear_cgg_properties: bool = True) -> ItemProperties | None:
+        '''
+        Loads the item properties from the block file. The properties are
+        later reused by various functions to generate the content guide. If
+        file fails to load or is missing some important data, it returns None.
+
+        :param path: The path to the item file.
+        :param clear_cgg_properties: If True, the function will clear the
+            custom properties used by the content guide generator after reading
+            them.
+        '''
+        # Load file
+        try:
+            data = load_jsonc(path)
+        except JSONDecodeError:
+            print_error(
+                f"Unable to load item file as JSON\n"
+                f"\tPath: {path.as_posix()}")
+            return None
+
+        file_modified = False  # tracks if it has custom json to delete
+
+        # List of errors to print at the end of the function
+        errors: list[str] = []
+
+        # Optional list with the patterns of the recipes
+        recipe_patterns: list[str] = []
+
+        root_walker = data / 'minecraft:block' / 'description'
+        # Identifier
+        identifier = (root_walker / 'identifier').data
+        if not isinstance(identifier, str):
+            errors.append("Missing block identifier")
+            return None
+        # Dropping and trading entities
+        dropping_entities = list_dropping_entities(identifier)
+        trading_entities = list_trading_entities(identifier)
+
+        # Description
+        description_walker = root_walker / 'description'
+        description: str = ""
+        if not description_walker.exists:
+            errors.append("Missing item description")
+        else:
+            description_data: list[str] = []
+            for d in description_walker // SKIP_LIST:
+                if not isinstance(d.data, str):
+                    errors.append(
+                        "Invalid block description (should be string or "
+                        "list of strings)")
+                    break
+                description_data.append(d.data)
+            description = '\n'.join(description_data)
+            if clear_cgg_properties:
+                file_modified = True
+                del description_walker.parent.data['description']
+        # Player facing
+        player_facing_walker = root_walker / 'player_facing'
+        player_facing: bool = False
+        if not player_facing_walker.exists:
+            craftable_items = _list_craftable_items()
+            if identifier in craftable_items:
+                recipe_patterns.append(
+                    "\n\n".join(craftable_items[identifier]))
+                player_facing = True
+            elif len(dropping_entities) > 0 or len(trading_entities) > 0:
+                player_facing = True
+            else:
+                errors.append(
+                    "Unable to determine player_facing property "
+                    "(assigned False by default)")
+        else:
+            if not isinstance(player_facing_walker.data, bool):
+                errors.append(
+                    "Invalid player_facing property "
+                    "(assigned False by default)")
+            else:
+                player_facing = player_facing_walker.data
+            if clear_cgg_properties:
+                file_modified = True
+                del root_walker.data['player_facing']
+        # Save file with removed custom properties
+        if file_modified:
+            with open(path, 'w') as f:
+                json.dump(data.data, f, indent='\t')
+        # Print errors
+        if len(errors) > 0:
+            print_error(
+                f"File {path.as_posix()} is missing properties "
+                "to generate summary of the BLOCK:\n\t- " +
+                "\n\t- ".join(errors)
+            )
+        return ItemProperties(
+            identifier, description, player_facing, recipe_patterns,
+            dropping_entities=dropping_entities,
+            trading_entities=trading_entities)
+
     def item_summary(self):
         '''
         Returns the summary of the item.
@@ -391,6 +490,100 @@ def list_items(
         result.append(f'- {item.identifier}')
     return '\n'.join(result)
 
+def summarize_blocks(
+        search_patterns: str | list[str],
+        exclude_patterns: str | list[str] | None = None,
+        player_facing: PlayerFacingSelector = 'all',
+) -> str:
+    '''
+    Returns the summaries of all blocks from paths that match the search
+    pattern.
+
+    :param search_pattern: glob pattern used to find the block files. The
+        pattern must be relative to behavior pack blocks folder.
+    :param exclude_patterns: the pattern that excludes the files even if they
+        matched the search pattern.
+    '''
+    block_paths = AppConfig.get().bp_path / 'blocks'
+    filtered_paths = filter_paths(
+        block_paths, search_patterns, exclude_patterns)
+
+    result: list[str] = []
+    for block_path in filtered_paths:
+        if not block_path.is_file():
+            continue
+        block = ItemProperties.from_block_path(block_path)
+        if block is None:
+            continue
+        if player_facing == 'player_facing' and not block.player_facing:
+            continue
+        elif player_facing == 'non_player_facing' and block.player_facing:
+            continue
+        result.append(block.item_summary())
+    return '\n'.join(result)
+
+def summarize_blocks_in_tables(
+        search_patterns: str | list[str],
+        exclude_patterns: str | list[str] | None = None,
+        player_facing: PlayerFacingSelector = 'all',
+) -> str:
+    '''
+    Returns the summaries of all blocks from paths that match the search
+    pattern.
+
+    :param search_pattern: glob pattern used to find the block files. The
+        pattern must be relative to behavior pack blocks folder.
+    :param exclude_patterns: the pattern that excludes the files even if they
+        matched the search pattern.
+    '''
+    block_paths = AppConfig.get().bp_path / 'blocks'
+    filtered_paths = filter_paths(
+        block_paths, search_patterns, exclude_patterns)
+    result: list[str] = [
+        "| Block | Description |",
+        "|------|-------------|"
+    ]
+    for block_path in filtered_paths:
+        if not block_path.is_file():
+            continue
+        block = ItemProperties.from_block_path(block_path)
+        if block is None:
+            continue
+        if player_facing == 'player_facing' and not block.player_facing:
+            continue
+        elif player_facing == 'non_player_facing' and block.player_facing:
+            continue
+        result.append(block.item_table_summary())
+    return '\n'.join(result)
+
+def list_blocks(
+        search_patterns: str | list[str],
+        exclude_patterns: str | list[str] | None = None,
+        player_facing: PlayerFacingSelector = 'all',
+) -> str:
+    '''
+    Simplified version of list_block_summaries that returns only the list of
+    block identifiers.
+
+    :param search_pattern: glob pattern used to find the block files. The
+        pattern must be relative to behavior pack blocks folder.
+    '''
+    blocks_path = AppConfig.get().bp_path / 'blocks'
+    filtered_paths = filter_paths(
+        blocks_path, search_patterns, exclude_patterns)
+
+    result: list[str] = []
+    for block_path in filtered_paths:
+        if not block_path.is_file():
+            continue
+        block = ItemProperties.from_block_path(block_path)
+        if player_facing == 'player_facing' and not block.player_facing:
+            continue
+        elif player_facing == 'non_player_facing' and block.player_facing:
+            continue
+        result.append(f'- {block.identifier}')
+    return '\n'.join(result)
+
 def summarize_spawn_eggs(
         search_patterns: str | list[str],
         exclude_patterns: str | list[str] | None = None,
@@ -497,12 +690,21 @@ def _list_craftable_items() -> dict[str, list[str]]:
     recipes_path = AppConfig.get().bp_path / 'recipes'
     result: dict[str, list[str]] = defaultdict(list)
     for recipe_path in recipes_path.rglob("*.json"):
+        the_chosen_one = False
+        if recipe_path.as_posix() == 'behavior_packs/0/recipes/cb/quartz_bricks_bannister_stair_north.recipe.json':
+            the_chosen_one = True
         try:
             recipe = load_recipe(recipe_path)
-        except InvalidRecipeException:
+        except InvalidRecipeException as e:
             print_error(
                 f"Failed to load recipe form: "
                 f"{recipe_path.as_posix()}")
+            if the_chosen_one:
+                raise Exception(
+                    f"Failed to load recipe form: "
+                    f"{recipe_path.as_posix()}"
+                    f"{e}"
+                )
             continue
         if isinstance(recipe, RecipeCrafting):
             recipe_text = (

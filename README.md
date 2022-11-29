@@ -6,6 +6,13 @@ You can read more about this tool in the [documentation](docs/README.md)
 
 
 # Changelog
+## 1.4.0
+Added support for custom blocks documentation using 
+`list_blocks()`, `summarize_blocks()` and `summarize_blocks_in_tables()`
+
+## 1.3.1
+Fixed listing spawn eggs in trade tables and loot tables.
+
 ## 1.3.0
 Spawn egg summary can detect items that use the `query.get_actor_info_id`
 function to assign the spawn egg to an entity.

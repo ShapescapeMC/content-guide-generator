@@ -15,7 +15,7 @@ from sqlite_bedrock_packs.better_json_tools import load_jsonc, JSONWalker
 
 # Gets the name of an entity for certain molang query
 ACTOR_ID_WILDCARD_REGEX = re.compile(
-    r"query\.get_actor_info_id\('([a-zA-Z0-9_]+:[a-zA-Z0-9_]+)'\)")
+    r"(?:(?:query)|(?:q))\.get_actor_info_id\('([a-zA-Z0-9_]+:[a-zA-Z0-9_]+)'\)")
 
 # A new format of naming spawn eggs without using weird Molang queries
 NEW_SPAWN_EGG_REGEX = re.compile(
@@ -72,17 +72,22 @@ class RecipeKey:
             self.data = self._load_data(json_data)
 
     def _load_data(self, json_data: Any) -> Union[int, ActorIdWildcard]:
+        recipe_key_data = None
         if isinstance(json_data.get("data", 0), int):
             recipe_key_data = json_data.get("data", 0)
-        elif (
-                (match := ACTOR_ID_WILDCARD_REGEX.fullmatch(json_data["data"])) and
-                isinstance(json_data["data"], str)):
-            recipe_key_data = ActorIdWildcard(match[1])
-            if self.item != "minecraft:spawn_egg":
-                raise InvalidRecipeException(
-                    "The ActorIdWildcard is only supported for "
-                    f"'minecraft:spawn_egg' not {self.item}")
-        else:
+        elif "data" in json_data and isinstance(json_data["data"], str):
+            if match := ACTOR_ID_WILDCARD_REGEX.fullmatch(json_data["data"]):
+                recipe_key_data = ActorIdWildcard(match[1])
+                if self.item != "minecraft:spawn_egg":
+                    raise InvalidRecipeException(
+                        "The ActorIdWildcard is only supported for "
+                        f"'minecraft:spawn_egg' not {self.item}")
+            else:
+                try:
+                    recipe_key_data = int(json_data["data"])
+                except ValueError:
+                    pass
+        if recipe_key_data is None:
             raise InvalidRecipeException(
                 "Recipe 'key' property 'data' is not an int or "
                 "a ActorIdWildcard")

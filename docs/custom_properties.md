@@ -139,3 +139,44 @@ Player facing is a boolean value that determines whether the item is a
 "player-facing" item or not. Most of the items are player-facing, but the
 Micosoft's recommendation is to separate them into two groups, while
 documenting.
+
+## Behavior Pack Block Files
+
+> **Note**: All of the properties used by the block are the same as the ones
+> used by the item. The only difference is the path to the file and JSON path
+> inside the file.
+> 
+> Blocks are stored in 'blocks' flder and the JSON path is using 'minecraft:block'
+> instead of 'minecraft:item'.
+
+### `description`
+
+- Path: `packs/BP/blocks/*.json`
+- JSON Path: `["minecraft:block"].description.description`
+
+Description is a string or a list of strings that describes the block in
+`summarize_blocks()` and `summarize_blocks_in_tables()` functions. If
+description is written as a list, it is assumed that each string is a separate
+line of the description
+
+**Examples**
+```
+"This is the main entity used for running commands."
+```
+```
+[
+    "This entity serves as player's companion. It has multiple purposes:",
+    "- It can heal the player",
+    "- It helps with telling the story"
+]
+```
+
+### `player_facing`
+
+- Path: `packs/BP/blocks/*.json`
+- JSON Path: `["minecraft:block"].description.player_facing`
+
+Player facing is a boolean value that determines whether the block is a
+"player-facing" block or not. Most of the blocks are player-facing, but the
+Micosoft's recommendation is to separate them into two groups, while
+documenting.

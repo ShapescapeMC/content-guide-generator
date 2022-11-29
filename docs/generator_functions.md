@@ -312,6 +312,13 @@ difference is that they expect paths to the entity files instead of the item
 files. Based on the entity files, they generate information about the spawn
 eggs of the entities.
 
+# `list_blocks()`, `summarize_blocks()` and `summarize_blocks_in_tables()`
+These functions are analogous to `list_items()`, `summarize_items()` and
+`summarize_items_in_tables()`. They print data in the same format. The only
+difference is that they expect paths to the block files instead of the item
+files. Based on the block files, they generate information about the custom
+blocks.
+
 
 # `sound_definitions()`
 Generates a list of sound definitions from the sound_definitions.json file.
@@ -339,4 +346,3 @@ Output
 > - Game state - Level won (game_state.level_won)
 > - Event - Wave complete (event.wave_complete)
 > ...
-

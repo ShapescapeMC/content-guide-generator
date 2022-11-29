@@ -12,7 +12,8 @@ from .errors import print_error
 from .entities import list_entities, summarize_entities, summarize_entities_in_tables
 from .items import (
     summarize_items, summarize_items_in_tables, list_items,
-    summarize_spawn_eggs, summarize_spawn_eggs_in_tables, list_spawn_eggs)
+    summarize_spawn_eggs, summarize_spawn_eggs_in_tables, list_spawn_eggs,
+    summarize_blocks, summarize_blocks_in_tables, list_blocks)
 from .functions import completion_guide, warp
 from .sound_definitions import sound_definitions
 from .globals import AppConfig
@@ -104,6 +105,9 @@ FUNCTION_MAP: dict[str, Callable] = {
     'summarize_items': summarize_items,
     'summarize_items_in_tables': summarize_items_in_tables,
     'list_items': list_items,
+    'summarize_blocks': summarize_blocks,
+    'summarize_blocks_in_tables': summarize_blocks_in_tables,
+    'list_blocks': list_blocks,
     'summarize_spawn_eggs': summarize_spawn_eggs,
     'summarize_spawn_eggs_in_tables': summarize_spawn_eggs_in_tables,
     'list_spawn_eggs': list_spawn_eggs,
