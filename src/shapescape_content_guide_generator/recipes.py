@@ -104,6 +104,18 @@ class RecipeKey:
         else:
             return self.data.actor_name + "_spawn_egg"
 
+    def get_full_item_name(self)-> str:
+        '''
+        Gets the full name of the item including the data value for recipes in
+        the content guide. Format: '<namespace>:<item>:<data>'
+        '''
+        if isinstance(self.data, int):
+            pattern = re.compile(r"(.+)(:[0-9]+)")
+            if match := pattern.fullmatch(self.item):
+                return self.item
+            return f"{self.item}:{self.data}"
+        return f"{self.item}"
+
 def load_recipe_name(recipe_path: Path) -> str:
     '''
     Simple function for loading just the name of the recipe from the file.

@@ -6,6 +6,10 @@ You can read more about this tool in the [documentation](docs/README.md)
 
 
 # Changelog
+## 1.4.1
+The recipes generated in the content guide include the data values of the
+items.
+
 ## 1.4.0
 Added support for custom blocks documentation using 
 `list_blocks()`, `summarize_blocks()` and `summarize_blocks_in_tables()`

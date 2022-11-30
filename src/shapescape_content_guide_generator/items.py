@@ -711,23 +711,23 @@ def _list_craftable_items() -> dict[str, list[str]]:
                 f"#### **Crafting recipe:**\n"
                 "**Ingredients:**\n")
             for k, v in recipe.keys.items():
-                recipe_text += f"- {v.item} as {k}\n"
+                recipe_text += f"- {v.get_full_item_name()} as {k}\n"
             recipe_text += "\n**Pattern:**\n```\n"
             recipe_text += "\n".join(recipe.pattern) + "\n```\n"
             result[recipe.result.get_true_item_name()].append(recipe_text)
         if isinstance(recipe, RecipeFurnace):
             recipe_text = (
                 "#### **Furnace recipe:**\n"
-                f"- Input: {recipe.input.item}\n"
-                f"- Output: {recipe.output.item}\n"
+                f"- Input: {recipe.input.get_full_item_name()}\n"
+                f"- Output: {recipe.output.get_full_item_name()}\n"
             )
             result[recipe.output.get_true_item_name()].append(recipe_text)
         if isinstance(recipe, RecipeBrewing):
             recipe_text = (
                 "#### **Brewing recipe:**\n"
-                f"- Input: {recipe.input.item}\n"
-                f"- Reagent: {recipe.reagent.item}\n"
-                f"- Output: {recipe.output.item}\n"
+                f"- Input: {recipe.input.get_full_item_name()}\n"
+                f"- Reagent: {recipe.reagent.get_full_item_name()}\n"
+                f"- Output: {recipe.output.get_full_item_name()}\n"
             )
             result[recipe.output.get_true_item_name()].append(recipe_text)
     return dict(result)
