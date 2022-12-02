@@ -6,6 +6,9 @@ You can read more about this tool in the [documentation](docs/README.md)
 
 
 # Changelog
+## 1.4.2
+Filter supports older verison of Python (3.9) previously only supported 3.10+
+
 ## 1.4.1
 The recipes generated in the content guide include the data values of the
 items.
