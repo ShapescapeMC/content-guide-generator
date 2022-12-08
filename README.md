@@ -6,6 +6,9 @@ You can read more about this tool in the [documentation](docs/README.md)
 
 
 # Changelog
+## 1.4.3
+Added `"block_entity"` entity category.
+
 ## 1.4.2
 Filter supports older verison of Python (3.9) previously only supported 3.10+
 
