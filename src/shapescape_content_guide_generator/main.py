@@ -126,11 +126,13 @@ def build_from_template() -> str:
     return '\n'.join(result)
 
 
-def main_regolith():
+def main_regolith(output_paths):
     result = build_from_template()
-    output_path = AppConfig.get().data_path / "OUTPUT.md"
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(result, encoding='utf8')
+    for e in output_paths:
+        output_path = AppConfig.get().data_path / e
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(result, encoding='utf8')
+
 
 def main_commandline():
     parser = argparse.ArgumentParser(
