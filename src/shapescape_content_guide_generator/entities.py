@@ -238,6 +238,8 @@ def summarize_entities(
         if entity.category not in categories:
             continue
         result.append(entity.entity_summary())
+    if len(result) == 0:
+        return "This category doesn't have any entities."
     return '\n'.join(result)
 
 def summarize_entities_in_tables(
@@ -264,10 +266,7 @@ def summarize_entities_in_tables(
         entities_path, search_patterns, exclude_patterns)
 
 
-    result: list[str] = [
-        "| Entity | Description | Locations |",
-        "|-------|----------|------|"
-    ]
+    result: list[str] = []
     for entity_path in filtered_paths:
         if not entity_path.is_file():
             continue
@@ -277,7 +276,13 @@ def summarize_entities_in_tables(
         if entity.category not in categories:
             continue
         result.append(entity.entity_table_summary())
-    return '\n'.join(result)
+    if len(result) == 0:
+        return "This category doesn't have any entities."
+    return '\n'.join(
+        [
+            "| Entity | Description | Locations |",
+            "|-------|----------|------|"
+        ] +  result)
 
 def list_entities(
         search_patterns: str | list[str],

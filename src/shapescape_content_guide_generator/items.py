@@ -425,6 +425,8 @@ def summarize_items(
         elif player_facing == 'non_player_facing' and item.player_facing:
             continue
         result.append(item.item_summary())
+    if len(result) == 0:
+        return "This category doesn't have any items."
     return '\n'.join(result)
 
 def summarize_items_in_tables(
@@ -444,10 +446,7 @@ def summarize_items_in_tables(
     item_paths = AppConfig.get().bp_path / 'items'
     filtered_paths = filter_paths(
         item_paths, search_patterns, exclude_patterns)
-    result: list[str] = [
-        "| Item | Description |",
-        "|------|-------------|"
-    ]
+    result: list[str] = []
     for item_path in filtered_paths:
         if not item_path.is_file():
             continue
@@ -459,7 +458,14 @@ def summarize_items_in_tables(
         elif player_facing == 'non_player_facing' and item.player_facing:
             continue
         result.append(item.item_table_summary())
-    return '\n'.join(result)
+    if len(result) == 0:
+        return "This category doesn't have any items."
+    return '\n'.join(
+        [
+            "| Item | Description |",
+            "|------|-------------|"
+        ] + result
+    )
 
 def list_items(
         search_patterns: str | list[str],
@@ -520,6 +526,8 @@ def summarize_blocks(
         elif player_facing == 'non_player_facing' and block.player_facing:
             continue
         result.append(block.item_summary())
+    if len(result) == 0:
+        return "This category doesn't have any blocks."
     return '\n'.join(result)
 
 def summarize_blocks_in_tables(
@@ -539,10 +547,7 @@ def summarize_blocks_in_tables(
     block_paths = AppConfig.get().bp_path / 'blocks'
     filtered_paths = filter_paths(
         block_paths, search_patterns, exclude_patterns)
-    result: list[str] = [
-        "| Block | Description |",
-        "|------|-------------|"
-    ]
+    result: list[str] = []
     for block_path in filtered_paths:
         if not block_path.is_file():
             continue
@@ -554,7 +559,13 @@ def summarize_blocks_in_tables(
         elif player_facing == 'non_player_facing' and block.player_facing:
             continue
         result.append(block.item_table_summary())
-    return '\n'.join(result)
+    if len(result) == 0:
+        return "This category doesn't have any blocks."
+    return '\n'.join(
+        [
+            "| Block | Description |",
+            "|------|-------------|"
+        ] + result)
 
 def list_blocks(
         search_patterns: str | list[str],
@@ -614,6 +625,8 @@ def summarize_spawn_eggs(
         elif player_facing == 'non_player_facing' and item.player_facing:
             continue
         result.append(item.item_summary())
+    if len(result) == 0:
+        return "This category doesn't have any spawn eggs."
     return '\n'.join(result)
 
 def summarize_spawn_eggs_in_tables(
@@ -633,10 +646,7 @@ def summarize_spawn_eggs_in_tables(
     item_paths = AppConfig.get().bp_path / 'items'
     filtered_paths = filter_paths(
         item_paths, search_patterns, exclude_patterns)
-    result: list[str] = [
-        "| Item | Description |",
-        "|------|-------------|"
-    ]
+    result: list[str] = []
     for item_path in filtered_paths:
         if not item_path.is_file():
             continue
@@ -648,7 +658,13 @@ def summarize_spawn_eggs_in_tables(
         elif player_facing == 'non_player_facing' and item.player_facing:
             continue
         result.append(item.item_table_summary())
-    return '\n'.join(result)
+    if len(result) == 0:
+        return "This category doesn't have any spawn eggs."
+    return '\n'.join(
+        [
+            "| Item | Description |",
+            "|------|-------------|"
+        ] + result)
 
 def list_spawn_eggs(
         search_patterns: str | list[str],
