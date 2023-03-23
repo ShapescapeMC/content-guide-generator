@@ -158,6 +158,8 @@ class RecipeCrafting:
 
     def _fake_pattern_from_ingredients(self, recipe: Any) -> List[str]:
         ingredients = recipe["ingredients"]
+        if isinstance(ingredients, dict):
+            ingredients = [ingredients]
         if not isinstance(ingredients, list):
             raise InvalidRecipeException("Recipe 'ingredients' property is not a list")
         pattern = [
@@ -196,6 +198,8 @@ class RecipeCrafting:
     def _fake_keys_from_ingredients(self, recipe: Any) -> Dict[str, RecipeKey]:
         # KEYS: self.keys
         ingredients = recipe["ingredients"]
+        if isinstance(ingredients, dict):
+            ingredients = [ingredients]
         if not isinstance(ingredients, list):
             raise InvalidRecipeException("Recipe 'ingredients' property is not a list")
         if len(ingredients) > 9:
