@@ -61,34 +61,36 @@ should be an empty list (`[]`).
 
 Category is a string that puts the entity into one of the following groups:
 - `"character"` - this category was added to match Microsoft's suggestion of
-    that describes how to write content guide. The entities used for telling
-    the story should be put into this category. Entities from this group should
-    be added to the "Characters and Villagers" section of the content guide.
+  that describes how to write content guide. The entities used for telling
+  the story should be put into this category. Entities from this group should
+  be added to the "Characters and Villagers" section of the content guide.
 - `"trader"` - this category was added to match Microsoft's suggestion of
-    that describes how to write content guide. The living entities used for
-    trading should be put into this category. The entities from this group
-    should be added to the "Characters and Villagers" section of the content.
+  that describes how to write content guide. The living entities used for
+  trading should be put into this category. The entities from this group
+  should be added to the "Characters and Villagers" section of the content.
 - `"non_player_facing_utility"` - every invisible entity like (path markers,
-    main entity, invisible spawners, etc.) should be added to this category.
-    Entities from this category should go to the "Non-Player Facing Entities"
-    section of the content guide.
+  main entity, invisible spawners, etc.) should be added to this category.
+  Entities from this category should go to the "Non-Player Facing Entities"
+  section of the content guide.
 - `"player_facing_utility"` - this category can be treated as "other" category.
-    It describes visible utility entities that don't interact with the player
-    directly in any way. Here are some examples:
+  It describes visible utility entities that don't interact with the player
+  directly in any way. Here are some examples:
     - a portal (with particle effect) that spawns mobs. It would be
-        non_player_facing but it's visible.
+      non_player_facing but it's visible.
     - an entity that represents a cloud of poison gas.
     - an entity used only to spawn certain particles and despawns immediately
-        after spawning.
+      after spawning.
     - an automatic turret or other traps
 - `"projectile"` - every entity that uses "minecraft:projectile" component
 - `"vehicle"` - inanimate entities that the player can ride on.
 - `"creature"` - every living entity that doesn't fit into character or
-    trader category (mobs and monsters).
+  trader category (mobs and monsters).
 - `"decoration"` - every entity used purely for visual purposes (e.g.
-    furniture)
+  furniture)
 - `"interactive_entity"` - inanimate entities that you spawn on the world to be
-    interacted with (e.g. entity based menus, stationary shop entities, etc.)
+  interacted with (e.g. entity based menus, stationary shop entities, etc.)
+- `"block_entity"` - entities that are used to imitate the properties of a block.
+
 
 ## `spawn_egg_description`
 
@@ -145,7 +147,7 @@ documenting.
 > **Note**: All of the properties used by the block are the same as the ones
 > used by the item. The only difference is the path to the file and JSON path
 > inside the file.
-> 
+>
 > Blocks are stored in 'blocks' flder and the JSON path is using 'minecraft:block'
 > instead of 'minecraft:item'.
 

@@ -23,7 +23,7 @@ EntityCategory = Literal[
 
 ENTITY_CATEGORIES = (
     "character", "trader", "non_player_facing_utility", "player_facing_utility",
-    "projectile", "creature", "decoration", "interactive_entity", "vehicle")
+    "projectile", "creature", "decoration", "interactive_entity", "vehicle", "block_entity")
 '''
 Notes on the decision of using these categories:
 - character & trader are a thing required by content guide template
@@ -48,6 +48,7 @@ Notes on the decision of using these categories:
    etc. The non-interactive parts of the shops should also be added to this
    category (as a part of a bigger thing).
 - "vehicle" - vehicles
+- "block_entity" - entities that are imitating blocks
 '''
 
 
@@ -126,7 +127,7 @@ class EntityProperties(NamedTuple):
                 errors.append(
                     f"Invalid entity category: {category}.\n"
                     f"Expected one of: " + ", ".join(ENTITY_CATEGORIES) + "\n"
-                    f"(assigned 'non_player_facing_utility' category by default)")
+                                                                          f"(assigned 'non_player_facing_utility' category by default)")
                 category = "non_player_facing_utility"
             if clear_cgg_properties:
                 file_modified = True
