@@ -5,6 +5,7 @@ Table of contents:
 - [Custom properties](/docs/custom_properties.md)
 - [Generator functions](/docs/generator_functions.md)
 - [Tutorial](/docs/tutorial.md)
+- [Writing the Documentation](/docs/writing_the_documentation.md)
 
 In this article you can read about:
 - [Behaviour Pack Entity Files](#behaviour-pack-entity-files)
