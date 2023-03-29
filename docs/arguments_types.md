@@ -12,10 +12,7 @@ generator functions.
 - **String** - text variable. Strings must be written in double quotes (`""`).
   **Examples:**
   - `"Hello World"` - string that says "Hello World".
-- **Glob pattern** - a string, with the pattern that matches one or multiple
-  file paths. Glob patterns can use special wildcards to match any name
-  of a file or directory (single star `*`), any number of characters
-  (double star `**`). **Examples:**
+- **Glob pattern** - a string, with the pattern that matches one or multiple file paths. Glob patterns can use special wildcards to match any name of a file or directory (single star `*`), any number of characters (double star `**`). **Examples:**
   - `"hello/*.json"` - all `.json` files in the `hello` directory
   - `"**/*.mcfunction"` - all `.mcfunction` files in the project
 - **List** - multiple values groupped together. Lists use square brackets
