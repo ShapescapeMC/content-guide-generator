@@ -1,21 +1,41 @@
 <!-- doctree start -->
+Table of contents:
 - [About the documentation](/docs/README.md)
 - [Arguments Types](/docs/arguments_types.md)
 - [Custom properties](/docs/custom_properties.md)
 - [Generator functions](/docs/generator_functions.md)
 - [Tutorial](/docs/tutorial.md)
+
+In this article you can read about:
+- [Behaviour Pack Entity Files](#behaviour-pack-entity-files)
+  - [`description`](#description)
+  - [`locations`](#locations)
+  - [`category`](#category)
+  - [`spawn_egg_description`](#spawn_egg_description)
+  - [`spawn_egg_player_facing`](#spawn_egg_player_facing)
+- [Behavior Pack Item Files](#behavior-pack-item-files)
+  - [`description`](#description)
+  - [`player_facing`](#player_facing)
+- [Behavior Pack Block Files](#behavior-pack-block-files)
+  - [`description`](#description)
+  - [`player_facing`](#player_facing)
 <!-- doctree end -->
 # Custom properties
-This page lists and explains all the custom properties that can be added to the project's JSON files to control the generation process.
+Custom properties are the properties that you add to various JSON Minecraft files to provide the generator with additional information about the entity that needs to be documented. This page lists and explains all the custom properties that can be added to the project's JSON files to control the generation process.
 
 ## Behaviour Pack Entity Files
-### Description
+This section describes the custom properties that can be added to the entity files in the behavior pack. The properties are added to the `["minecraft:entity"].description` object in the JSON file.
+
+### `description`
 
 - Path: `BP/entities/*.json`.
 - JSON path: `["minecraft:entity"].description.description`.
 
-Description is a string or list of strings that describes the entity in the `summarize_entities()` and `summarize_entities_in_tables()` functions. If description is written as a list, it is assumed that each string is a separate line of the description.
+>  **NOTE**
+>
+> The `description` is a property of `description` object.
 
+Description is a string or list of strings that describes the entity in the `summarize_entities()` and `summarize_entities_in_tables()` functions. If description is written as a list, it is assumed that each string is a separate line of the description. You can read more about the functions in [Generator Functions](/docs/generator_functions.md) section.
 
 **Examples**
 ```
@@ -69,14 +89,14 @@ Category is a string that classifies the entity into one of the following groups
 - `"block_entity"` - entities used to mimic the properties of a block.
 
 
-## `spawn_egg_description`
+### `spawn_egg_description`
 
 - Path: `BP/entities/*.json`
 - JSON Path: `["minecraft:entity"].description.spawn_egg_description`
 
 Description of the spawn egg. It's analogous to the item's `description` property. It's used in the functions that describe spawn eggs.
 
-## `spawn_egg_player_facing`
+### `spawn_egg_player_facing`
 
 - Path: `BP/entities/*.json`
 - JSON Path: `["minecraft:entity"].description.spawn_egg_player_facing`
@@ -84,12 +104,14 @@ Description of the spawn egg. It's analogous to the item's `description` propert
 A boolean indicating whether the spawn egg is player facing or not. It's analogous to the `player_facing` property of the item. It's used for the functions that describe spawn eggs.
 
 ## Behavior Pack Item Files
+This section describes the custom properties that can be added to the item files in the behavior pack. The properties are added to the `["minecraft:item"].description` object in the JSON file.
+
 ### `description`
 
 - Path: `packs/BP/items/*.json`
 - JSON Path: `["minecraft:item"].description.description`
 
-Description is a string or list of strings that describes the item in the `summarize_items()` and `summarize_items_in_tables()` functions. If description is written as a list, it is assumed that each string is a separate line of the description.
+Description is a string or list of strings that describes the item in the `summarize_items()` and `summarize_items_in_tables()` functions. If description is written as a list, it is assumed that each string is a separate line of the description. You can read more about the functions in [Generator Functions](/docs/generator_functions.md) section.
 
 **Examples**
 ```
@@ -112,19 +134,18 @@ Player-facing is a boolean value that determines whether or not the item is a "p
 
 ## Behavior Pack Block Files
 
-> **Note**: All of the properties used by the block are the same as the ones
-> used by the item. The only difference is the path to the file and JSON path
-> inside the file.
+This section describes the custom properties that can be added to the block files in the behavior pack. The properties are added to the `["minecraft:block"].description` object in the JSON file.
+
+> **Note**: All of the properties used by the block are the same as the ones used by the item. The only difference is the path to the file and JSON path inside the file.
 >
-> Blocks are stored in 'blocks' flder and the JSON path is using 'minecraft:block'
-> instead of 'minecraft:item'.
+> Blocks are stored in 'blocks' flder and the JSON path is using 'minecraft:block' instead of 'minecraft:item'.
 
 ### `description`
 
 - Path: `packs/BP/blocks/*.json`
 - JSON Path: `["minecraft:block"].description.description`
 
-Description is a string or list of strings that describes the block in the `summarize_blocks()` and `summarize_blocks_in_tables()` functions. If description is written as a list, it is assumed that each string is a separate line of description.
+Description is a string or list of strings that describes the block in the `summarize_blocks()` and `summarize_blocks_in_tables()` functions. If description is written as a list, it is assumed that each string is a separate line of description. You can read more about the functions in [Generator Functions](/docs/generator_functions.md) section.
 
 **Examples**
 ```

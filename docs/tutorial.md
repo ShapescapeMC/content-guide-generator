@@ -1,47 +1,36 @@
 <!-- doctree start -->
+Table of contents:
 - [About the documentation](/docs/README.md)
 - [Arguments Types](/docs/arguments_types.md)
 - [Custom properties](/docs/custom_properties.md)
 - [Generator functions](/docs/generator_functions.md)
 - [Tutorial](/docs/tutorial.md)
+
+In this article you can read about:
+- [Using the generator with Regolith](#using-the-generator-with-regolith)
+- [Using the generator without Regolith (not recommended)](#using-the-generator-without-regolith-not-recommended)
+- [Writing the `TEMPLATE.md` file](#writing-the-templatemd-file)
+- [Creating PDF files from the outputs of the generator](#creating-pdf-files-from-the-outputs-of-the-generator)
 <!-- doctree end -->
 
 # Tutorial
 
-There are two ways of using the library - with or without regolith. The next two sections describe both methods. Depending on your needs, you may wish to skip one of them.
+There are two ways of using the library - with or without Regolith. The next two sections describe both methods. Depending on your needs, you may wish to skip one of them.
 
 ## Using the generator with Regolith
 
-Using the generator with Regolith is easy and recommended. You need to add the generator to your project just like any other Regolith filter.
+Using the generator with Regolith is easy and recommended. You need to add the generator to your project just like any other Regolith filter. 
 
-**1.** Install the filter with the command
-```
-regolith install github.com/ShapescapeMC/regolith-filters/content_guide_generator
-```
+You can find the installation instructions on the README page of the content guide generator filter here: https://github.com/Shapescape-Software/content_guide_generator#-installation
 
-If you have Regolith and Python 3.9+ properly installed, it should install the filter and create a virtual environment for it with `content_guide_generator` installed and ready to use. You don't need to manually install `content_guide_generator` on your main Python environment.
-
-**2.** Add the filter to the `filters` list in the Regolith `config.json` file
-project:
-```json
-                    {
-                        "filter": "content_guide_generator"
-                    },
-```
-**3.** Running the generator should now create the `OUTPUT.md` file in the filter data directory (`<filters data path>/content_guide_generator/OUTPUT.md`).
-
-**WARNING**.
-> 
-> The generator expects the filter data directory to contain the `TEMPLATE.md` file (`<filters data path>/content_guide_generator/TEMPLATE.md`). Step 2 of the installation process should take care of this, but if for some reason the file is missing, you will need to create it manually.
-> 
-> You can read more about the template file below in the section [Writing the TEMPLATE.md file](/docs/tutorial.md#writing-the-templatemd-file).
+After adding the filter to your Regolith project, you can configure its outputs by modifying the TEMPLATE.md file. You can read more about the template file [here](/docs/tutorial.md#writing-the-templatemd-file)
 
 ## Using the generator without Regolith (not recommended)
 
 This library comes with a command line tool (`shapescape-content-guide-generator.exe`) that can be used independently of Regolith. If you want to use it, you need to install the library first. You can do this by running the following command:
 
 ```
-pip install git+https://github.com/ShapescapeMC/content-guide-generator
+pip install git+https://github.com/Shapescape-Software/content-guide-generator-module
 ```
 (this assumes you have Python 3.10 or higher installed)
 
@@ -89,14 +78,17 @@ shapescape-content-guide-generator.exe -r "path/to/rp" -b "path/to/bp" -d "path/
 
 The `TEMPLATE.md` file is the main way to customise the content guide. It is basically a normal Markdown file, but you can insert `:generate:` functions into it to generate certain parts of the content guide. You can read more about the generator functions in the [Generator Functions](/docs/generator_functions.md) section.
 
-A good template file can be found here: 
-https://github.com/ShapescapeMC/regolith-filters/blob/master/content_guide_generator/data/TEMPLATE.md
+You can find an example of the `TEMPLATE.md` on the Content Guide Generator Regolith filter repository, in its default `data` folder:
+https://github.com/Shapescape-Software/content_guide_generator/blob/master/content_guide_generator/data/TEMPLATE.md
 
-> WARNING
->
-> Note that this file contains references to other files. It uses the `:generate: insert()` function, which inserts the contents of one `md` file into another. If you want to use this template, you need to copy the whole `data` folder, not just the `TEMPLATE.md` file.
 
 If you're using Regolith, this file will be created automatically when the filter is installed. If you're using the command line tool, you'll need to create this file manually in the path you specify in the `-d' argument.
 
+> WARNING
+>
+> If you're not working with Regolith, note that this file contains references to other files. It uses the `:generate: insert()` function, which inserts the contents of one `md` file into another. If you want to use this template, you need to copy the whole `data` folder, not just the `TEMPLATE.md` file.
+
 If you look at the template file, there is not too much to explain. You have to write normal Markdown, but some of the lines start with `:generate: function_name()`. All the functions are described in the [Generator functions](/docs/generator_functions.md) section, but you probably won't need to edit them at all. Some of the functions will work better if you also modify the entities and items in your behaviour pack to include custom properties. You can read more about custom properties in the [Custom Properties](/docs/custom_properties.md) section.
 
+## Creating PDF files from the outputs of the generator
+The Content Guide Generator does not generate PDF files. It only generates Markdown files. If you want to create PDF files from the Markdown files, you can use a tool like Markdown PDF plugin for VS Code: https://marketplace.visualstudio.com/items?itemName=yzane.markdown-pdf

@@ -1,9 +1,12 @@
 <!-- doctree start -->
+Table of contents:
 - [About the documentation](/docs/README.md)
 - [Arguments Types](/docs/arguments_types.md)
 - [Custom properties](/docs/custom_properties.md)
 - [Generator functions](/docs/generator_functions.md)
 - [Tutorial](/docs/tutorial.md)
+
+In this article you can read about:
 <!-- doctree end -->
 # Arguments Types
 This section describes the types of arguments that can be used in the generator functions.

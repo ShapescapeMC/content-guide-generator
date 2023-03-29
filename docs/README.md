@@ -1,9 +1,15 @@
 <!-- doctree start -->
+Table of contents:
 - [About the documentation](/docs/README.md)
 - [Arguments Types](/docs/arguments_types.md)
 - [Custom properties](/docs/custom_properties.md)
 - [Generator functions](/docs/generator_functions.md)
 - [Tutorial](/docs/tutorial.md)
+
+In this article you can read about:
+- [How to read the documentation](#how-to-read-the-documentation)
+- [Older versions of the documentation](#older-versions-of-the-documentation)
+- [How to write the documentation](#how-to-write-the-documentation)
 <!-- doctree end -->
 
 # About the documentation
