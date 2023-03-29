@@ -32,9 +32,7 @@ This section describes the custom properties that can be added to the entity fil
 - Path: `BP/entities/*.json`.
 - JSON path: `["minecraft:entity"].description.description`.
 
->  **NOTE**
->
-> The `description` is a property of `description` object.
+>  **Note** The `description` is a property of `description` object.
 
 Description is a string or list of strings that describes the entity in the `summarize_entities()` and `summarize_entities_in_tables()` functions. If description is written as a list, it is assumed that each string is a separate line of the description. You can read more about the functions in [Generator Functions](/docs/generator_functions.md) section.
 
@@ -160,7 +158,7 @@ This section describes the custom properties that can be added to the block file
 "player_facing": true
 ```
 
-> **Note**: All of the properties used by the block are the same as the ones used by the item. The only difference is the path to the file and JSON path inside the file.
+> **Note** All of the properties used by the block are the same as the ones used by the item. The only difference is the path to the file and JSON path inside the file.
 >
 > Blocks are stored in 'blocks' flder and the JSON path is using 'minecraft:block' instead of 'minecraft:item'.
 

@@ -29,13 +29,9 @@ Generator functions are the functions you can use to insert text into the docume
 
 The tag and functions are replaced by the text that the function returns.
 
-> **NOTE**
->
-> This page refers to function arguments by their data types, or by short descriptive words that tell you what they are (like glob pattern). If you don't know what that means, you should read the [Arguments Types](/docs/arguments_types.md)
+> **Note** This page refers to function arguments by their data types, or by short descriptive words that tell you what they are (like glob pattern). If you don't know what that means, you should read the [Arguments Types](/docs/arguments_types.md)
 
-> **NOTE**
->
-> Some of the functions use "custom entity properties" or "custom item properties". You can read about them in the [Custom Properties](/docs/custom_properties.md)
+> **Note** Some of the functions use "custom entity properties" or "custom item properties". You can read about them in the [Custom Properties](/docs/custom_properties.md)
 
 ## `completion_guide()`.
 Generates the completion guide for the map based on the completion guide functions. Function names must follow the pattern `<step>_<title>`. Where `<step>` is an integer specifying the order of the steps and `<title>` is the title of the step. The `<title>` should be written in snake_case. The function will change this to title_case in the output.
