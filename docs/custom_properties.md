@@ -87,7 +87,7 @@ Category is a string that classifies the entity into one of the following groups
 - `"interactive_entity"` - inanimate entities you spawn in the world to interact with (e.g. entity-based menus, stationary shop entities, etc.)
 - `"block_entity"` - entities used to mimic the properties of a block.
 
-**Examples***
+**Examples**
 ```
 "category": "block_entity"
 ```
