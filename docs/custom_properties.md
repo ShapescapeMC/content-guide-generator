@@ -39,10 +39,10 @@ Description is a string or list of strings that describes the entity in the `sum
 
 **Examples**
 ```
-"This is the main entity used for running commands."
+"description": "This is the main entity used for running commands."
 ```
 ```
-[
+"description": [
     "This entity serves as player's companion. It has multiple purposes:",
     "- It can heal the player",
     "- It helps with telling the story"
@@ -61,10 +61,10 @@ If it doesn't make sense to provide locations for information about the entity (
 
 **Examples**
 ```
-[]
+"locations": []
 ```
 ```
-["1 2 3", "1.1 -2.3 10"]
+"locations": ["1 2 3", "1.1 -2.3 10"]
 ```
 
 
@@ -88,6 +88,11 @@ Category is a string that classifies the entity into one of the following groups
 - `"interactive_entity"` - inanimate entities you spawn in the world to interact with (e.g. entity-based menus, stationary shop entities, etc.)
 - `"block_entity"` - entities used to mimic the properties of a block.
 
+**Examples***
+```
+"category": "block_entity"
+```
+
 
 ### `spawn_egg_description`
 
@@ -96,12 +101,25 @@ Category is a string that classifies the entity into one of the following groups
 
 Description of the spawn egg. It's analogous to the item's `description` property. It's used in the functions that describe spawn eggs.
 
+**Examples**
+```
+"spawn_egg_description": "An item that spawns a dragon"
+```
+```
+"spawn_egg_description": ["An item that spawns a dragon"]
+```
+
 ### `spawn_egg_player_facing`
 
 - Path: `BP/entities/*.json`
 - JSON Path: `["minecraft:entity"].description.spawn_egg_player_facing`
 
 A boolean indicating whether the spawn egg is player facing or not. It's analogous to the `player_facing` property of the item. It's used for the functions that describe spawn eggs.
+
+**Examples**
+```
+"spawn_egg_player_facing": true
+```
 
 ## Behavior Pack Item Files
 This section describes the custom properties that can be added to the item files in the behavior pack. The properties are added to the `["minecraft:item"].description` object in the JSON file.
@@ -115,10 +133,10 @@ Description is a string or list of strings that describes the item in the `summa
 
 **Examples**
 ```
-"This is the main entity used for running commands."
+"description": "This is the main entity used for running commands."
 ```
 ```
-[
+"description": [
     "This entity serves as player's companion. It has multiple purposes:",
     "- It can heal the player",
     "- It helps with telling the story"
@@ -136,6 +154,11 @@ Player-facing is a boolean value that determines whether or not the item is a "p
 
 This section describes the custom properties that can be added to the block files in the behavior pack. The properties are added to the `["minecraft:block"].description` object in the JSON file.
 
+**Examples**
+```
+"player_facing": true
+```
+
 > **Note**: All of the properties used by the block are the same as the ones used by the item. The only difference is the path to the file and JSON path inside the file.
 >
 > Blocks are stored in 'blocks' flder and the JSON path is using 'minecraft:block' instead of 'minecraft:item'.
@@ -149,10 +172,10 @@ Description is a string or list of strings that describes the block in the `summ
 
 **Examples**
 ```
-"This is the main entity used for running commands."
+"description": "This is the main entity used for running commands."
 ```
 ```
-[
+"description": [
     "This entity serves as player's companion. It has multiple purposes:",
     "- It can heal the player",
     "- It helps with telling the story"
@@ -165,3 +188,8 @@ Description is a string or list of strings that describes the block in the `summ
 - JSON Path: `["minecraft:block"].description.player_facing`
 
 Player facing is a boolean value that determines whether the block is a "player-facing" block or not. Most blocks are player-facing, but Microsoft's recommendation is to split them into two groups for documentation purposes.
+
+**Examples**
+```
+"player_facing": true
+```
