@@ -6,6 +6,15 @@ You can read more about this tool in the [documentation](docs/README.md)
 
 
 # Changelog
+## 1.5.1
+The recipe image generator can accept shapeless recipes which define ingredients as a dictionary.
+
+## 1.5.0
+The `summerize_...` functions generate different messages when there is no data to summarize. They say that there is missing data.
+
+## 1.4.4
+Added a function for outputing data to multiple files. This is used with the combination of the "output_paths" property of the Regolith filter which uses this library.
+
 ## 1.4.3
 Added `"block_entity"` entity category.
 
