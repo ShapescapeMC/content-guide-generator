@@ -8,12 +8,10 @@ Table of contents:
 - [Writing the Documentation](/docs/writing_the_documentation.md)
 
 In this article you can read about:
-- [How to read the documentation](#how-to-read-the-documentation)
 - [Older versions of the documentation](#older-versions-of-the-documentation)
 <!-- doctree end -->
 
 # About the documentation
-## How to read the documentation
 The best place to start is the [tutorial](/docs/tutorial.md). The tutorial page should be sufficient to get you started with the basics of the library. The tutorial page has links to the other pages in the documentation.
 
 ## Older versions of the documentation
