@@ -5,6 +5,9 @@ You can read more about this tool in the [documentation](docs/README.md)
 
 
 # Changelog
+## 1.6.0
+Added new function `summarize_trades()` which generates a human-readable summary of all of the trades in the game and an information about the entities that use them.
+
 ## 1.5.1
 The recipe image generator can accept shapeless recipes which define ingredients as a dictionary.
 

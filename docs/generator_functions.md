@@ -16,6 +16,7 @@ In this article you can read about:
 - [`list_spawn_eggs()`, `summarize_spawn_eggs()` and `summarize_spawn_eggs_in_tables()`](#list_spawn_eggs-summarize_spawn_eggs-and-summarize_spawn_eggs_in_tables)
 - [`list_blocks()`, `summarize_blocks()` and `summarize_blocks_in_tables()` functions](#list_blocks-summarize_blocks-and-summarize_blocks_in_tables-functions)
 - [`sound_definitions()`](#sound_definitions)
+- [`summarize_trades()`](#summarize_trades)
 <!-- doctree end -->
 # Generator functions
 
@@ -303,3 +304,49 @@ Output
 > - Game state - Level won (game_state.level_won)
 > - Event - Wave complete (event.wave_complete)
 > ...
+
+## `summarize_trades()`
+Creates a summary of all of the trades defined in the behavior pack. The summary contains simplified versions of the trade definitions and a list of entities that use each trade.
+
+**Syntax**
+```
+:generate: summarize_trades(search_patterns, exclude_patterns)
+```
+**Properties:**
+- `search_patterns` - glob pattern or list of glob patterns to match files to include.
+- `exclude_patterns [OPTIONAL]` - glob pattern or list of glob patterns to match files to exclude (even if they match the `search_patterns`). The value of this property is null by default. You don't need to specify it if you don't want to exclude any files.
+
+**Example**
+
+Input
+
+> :generate: summarize_trades("**/*.json", null)
+
+Output
+
+> ## Trade: ancient_builder/ancient_builder.trade.json
+> #### Traded by:
+> - shapescape:ancient_builder
+> #### Content
+> ```
+> Tier 1 trades (Total EXP required: 0):
+> ======================================
+> 
+> Group 1 - Selects 1 of following trades:
+> ----------------------------------------
+> 
+> - Gives 16⨯shapescape:fur_block_orange FOR 4⨯minecraft:emerald
+> - Gives 16⨯shapescape:fur_block_green FOR 4⨯minecraft:emerald
+> - Gives 16⨯shapescape:fur_block_blue FOR 4⨯minecraft:emerald
+> - Gives 16⨯shapescape:fur_block_purple FOR 4⨯minecraft:emerald
+> 
+> Group 2 - Selects 1 of following trades:
+> ----------------------------------------
+> 
+> - Gives 4⨯shapescape:raw_primal_meat & 4⨯minecraft:dirt FOR 1⨯minecraft:emerald & 1⨯minecraft:gold
+> 
+> Group 3 - Selects 1 of following trades:
+> ----------------------------------------
+> 
+> - Gives 2⨯shapescape:ancient_shard FOR 1⨯minecraft:emerald
+> - Gives 7⨯shapescape:raw_primal_meat FOR 1⨯minecraft:emerald
