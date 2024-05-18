@@ -1,4 +1,4 @@
-from sqlite_bedrock_packs import EasyQuery
+from sqlite_bedrock_packs import yield_from_easy_query, SoundDefinition
 from .globals import get_db
 
 def _nice_sound_name(sound: str):
@@ -14,8 +14,7 @@ def _nice_sound_name(sound: str):
 def sound_definitions() -> str:
     db = get_db()
     result: list[str] = []
-    q = EasyQuery.build(db, 'SoundDefinition')
-    for sound_definition, in q.yield_wrappers():
+    for sound_definition, in yield_from_easy_query(db, SoundDefinition):
         nice_name = _nice_sound_name(sound_definition.identifier)
         full = f"{nice_name} ({sound_definition.identifier})"
         result.append(f"- {full}")

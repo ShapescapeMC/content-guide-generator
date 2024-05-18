@@ -12,8 +12,11 @@ from json import JSONDecodeError
 import json
 
 from sqlite_bedrock_packs.better_json_tools import load_jsonc, SKIP_LIST
-from sqlite_bedrock_packs import EasyQuery
-from sqlite_bedrock_packs.wrappers import Entity
+from sqlite_bedrock_packs import (
+    yield_from_easy_query, Entity, LootTable,
+    LootTableItemSpawnEggReferenceField, BpItem,
+    TradeTable, TradeTableItemSpawnEggReferenceField
+)
 
 # Local imports
 from .utils import filter_paths
@@ -755,25 +758,20 @@ def list_dropping_entities(item_name: str) -> list[str]:
     db = get_db()
     result: list[str] = []
     if item_name.endswith("_spawn_egg"):
-        q = EasyQuery.build(
-            db, "LootTable", "LootTableItemSpawnEggReferenceField",
-            "Entity",
-            where=(
-                "LootTableItemSpawnEggReferenceField.spawnEggIdentifier = "
-                f"'{item_name}'")
-        )
-        for _, _, entity in q.yield_wrappers():
-            entity = cast(Entity, entity)
-            if entity.identifier is None:
+        for _, _, entity in yield_from_easy_query(
+                db, LootTable, LootTableItemSpawnEggReferenceField, Entity,
+                where=[
+                    "LootTableItemSpawnEggReferenceField.spawnEggIdentifier = "
+                    f"'{item_name}'"
+                ]):
+            if entity.identifier is None:  # type: ignore
                 continue
             result.append(entity.identifier)
     else:
-        q = EasyQuery.build(
-            db, 'BpItem', 'LootTable', 'Entity', 
-            where=[f"BpItem.identifier = '{item_name}'"])
-        for _, _, entity in q.yield_wrappers():
-            entity = cast(Entity, entity)
-            if entity.identifier is None:
+        for _, _, entity in yield_from_easy_query(
+                db, BpItem, LootTable, Entity,
+                where=[f"BpItem.identifier = '{item_name}'"]):
+            if entity.identifier is None:  # type: ignore
                 continue
             result.append(entity.identifier)
     return result
@@ -785,25 +783,20 @@ def list_trading_entities(item_name: str) -> list[str]:
     db = get_db()
     result: list[str] = []
     if item_name.endswith("_spawn_egg"):
-        q = EasyQuery.build(
-            db, "TradeTable", "TradeTableItemSpawnEggReferenceField",
-            "Entity",
-            where=(
-                "TradeTableItemSpawnEggReferenceField.spawnEggIdentifier = "
-                f"'{item_name}'")
-        )
-        for _, _, entity in q.yield_wrappers():
-            entity = cast(Entity, entity)
-            if entity.identifier is None:
+        for _, _, entity in yield_from_easy_query(
+                db, TradeTable, TradeTableItemSpawnEggReferenceField, Entity,
+                where=[
+                    "TradeTableItemSpawnEggReferenceField.spawnEggIdentifier = "
+                    f"'{item_name}'"
+                ]):
+            if entity.identifier is None:  # type: ignore
                 continue
             result.append(entity.identifier)
     else:
-        q = EasyQuery.build(
-            db, 'BpItem', 'TradeTable', 'Entity',
-            where=[f"BpItem.identifier = '{item_name}'"])
-        for _, _, entity in q.yield_wrappers():
-            entity = cast(Entity, entity)
-            if entity.identifier is None:
+        for _, _, entity in yield_from_easy_query(
+                db, BpItem, TradeTable, Entity,
+                where=[f"BpItem.identifier = '{item_name}'"]):
+            if entity.identifier is None:  # type: ignore
                 continue
             result.append(entity.identifier)
     return result

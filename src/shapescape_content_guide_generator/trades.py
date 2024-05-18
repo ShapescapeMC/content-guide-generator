@@ -6,15 +6,13 @@ from __future__ import annotations
 
 from pathlib import Path
 from functools import cache
-from typing import NamedTuple, Any, cast, Literal
+from typing import NamedTuple, Literal
 
 from json import JSONDecodeError
-import json
 
 from sqlite_bedrock_packs.better_json_tools import load_jsonc
 from sqlite_bedrock_packs.better_json_tools.json_walker import JSONWalker
-from sqlite_bedrock_packs import EasyQuery
-from sqlite_bedrock_packs.wrappers import Entity
+from sqlite_bedrock_packs import yield_from_easy_query, Entity, TradeTable
 
 # Local imports
 from .utils import filter_paths
@@ -255,12 +253,10 @@ def list_trade_using_entities(trade_table_id: str) -> list[str]:
     '''
     db = get_db()
     result: list[str] = []
-    q = EasyQuery.build(
-        db, 'TradeTable', 'Entity',
-        where=[f"TradeTable.identifier = '{trade_table_id}'"])
-    for _, entity in q.yield_wrappers():
-        entity = cast(Entity, entity)
-        if entity.identifier is None:
+    for _, entity in yield_from_easy_query(
+            db, TradeTable, Entity,
+            where=[f"TradeTable.identifier = '{trade_table_id}'"]):
+        if entity.identifier is None:  # type: ignore
             continue
         result.append(entity.identifier)
     return result
