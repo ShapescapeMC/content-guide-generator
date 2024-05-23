@@ -17,6 +17,9 @@ In this article you can read about:
 - [`list_blocks()`, `summarize_blocks()` and `summarize_blocks_in_tables()` functions](#list_blocks-summarize_blocks-and-summarize_blocks_in_tables-functions)
 - [`sound_definitions()`](#sound_definitions)
 - [`summarize_trades()`](#summarize_trades)
+- [`list_features()` `summarize_features()` and `summarize_features_in_tables()` functions](#list_features-summarize_features-and-summarize_features_in_tables-functions)
+- [`list_feature_rules()` `summarize_feature_rules()` and `summarize_feature_rules_in_tables()` functions](#list_feature_rules-summarize_feature_rules-and-summarize_feature_rules_in_tables-functions)
+- [`feature_tree()`](#feature_tree)
 <!-- doctree end -->
 # Generator functions
 
@@ -350,3 +353,17 @@ Output
 > 
 > - Gives 2⨯shapescape:ancient_shard FOR 1⨯minecraft:emerald
 > - Gives 7⨯shapescape:raw_primal_meat FOR 1⨯minecraft:emerald
+
+## `list_features()`, `summarize_features()` and `summarize_features_in_tables()` functions
+The feature summaries don't take any arguments. They list all the features defined in the behavior pack. The summaries contain the feature identifiers, the descriptions and the list of features that are placed by the described feature.
+
+## `list_feature_rules()`, `summarize_feature_rules()` and `summarize_feature_rules_in_tables()` functions
+The feature rule summaries don't take any arguments. They list all the feature rules defined in the behavior pack. The summaries contain the feature rule identifiers, the descriptions and the list of features that are placed by the described feature rule.
+
+## `feature_tree()`
+Creates a tree of features and feature rules. This is useful to give an overview of how the features are connected to each other. The function does not take any properties.
+feature_tree
+**Syntax**
+```
+:generate: feature_tree()
+```

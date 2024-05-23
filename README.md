@@ -5,6 +5,9 @@ You can read more about this tool in the [documentation](docs/README.md)
 
 
 # Changelog
+## 1.7.0
+Added 6 new functions for summarizing features and feature rules: `list_features()`, `summarize_features()`, `summarize_features_in_tables()`, `list_feature_rules()`, `summarize_feature_rules()`, `summarize_feature_rules_in_tables()` and `feature_tree()`.
+
 ## 1.6.0
 Added new function `summarize_trades()` which generates a human-readable summary of all of the trades in the game and an information about the entities that use them.
 

@@ -18,7 +18,10 @@ from .trades import summarize_trades
 from .functions import completion_guide, warp
 from .sound_definitions import sound_definitions
 from .globals import AppConfig
-
+from .features import (
+    list_feature_rules, summarize_feature_rules_in_tables,
+    summarize_feature_rules, list_features, summarize_features,
+    summarize_features_in_tables, feature_tree)
 
 def _split_func_parts(func: str) -> tuple[str, list] | None:
     '''
@@ -112,7 +115,14 @@ FUNCTION_MAP: dict[str, Callable] = {
     'summarize_spawn_eggs': summarize_spawn_eggs,
     'summarize_spawn_eggs_in_tables': summarize_spawn_eggs_in_tables,
     'list_spawn_eggs': list_spawn_eggs,
-    'summarize_trades': summarize_trades
+    'summarize_trades': summarize_trades,
+    'list_feature_rules': list_feature_rules,
+    'summarize_feature_rules_in_tables': summarize_feature_rules_in_tables,
+    'summarize_feature_rules': summarize_feature_rules,
+    'list_features': list_features,
+    'summarize_features': summarize_features,
+    'summarize_features_in_tables': summarize_features_in_tables,
+    'feature_tree': feature_tree,
 }
 
 def build_from_template() -> str:
