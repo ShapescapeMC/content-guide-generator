@@ -95,8 +95,6 @@ def _list_feature_rules() -> list[FeatureOrFeatureRulesProperties]:
         ))
     return result
 
-
-
 @cache
 def _list_features() -> list[FeatureOrFeatureRulesProperties]:
     '''
@@ -144,11 +142,11 @@ def summarize_feature_rules() -> str:
     '''
     Returns the summaries of all feature rules.
     '''
-
-
-
     result: list[str] = []
-    for feature_rule in _list_feature_rules():
+    feature_rules = _list_feature_rules()
+    if len(feature_rules) == 0:
+        return "There is no feature rules on this project."
+    for feature_rule in feature_rules:
         result.append(feature_rule.summary())
 
     if len(result) == 0:
@@ -160,7 +158,10 @@ def summarize_feature_rules_in_tables() -> str:
     Returns the summaries of all feature rules in a table format.
     '''
     result: list[str] = []
-    for feature_rule in _list_feature_rules():
+    feature_rules = _list_feature_rules()
+    if len(feature_rules) == 0:
+        return "There is no feature rules on this project."
+    for feature_rule in feature_rules:
         result.append(feature_rule.table_summary())
     
     if len(result) == 0:
@@ -179,7 +180,10 @@ def list_feature_rules() -> str:
     list of feature rule identifiers.
     '''
     result: list[str] = []
-    for feature_rule in _list_feature_rules():
+    feature_rules = _list_feature_rules()
+    if len(feature_rules) == 0:
+        return "There is no feature rules on this project."
+    for feature_rule in feature_rules:
         result.append(f'- {feature_rule.identifier}')
     return '\n'.join(result)
 
@@ -188,7 +192,10 @@ def summarize_features() -> str:
     Returns the summaries of all features.
     '''
     result: list[str] = []
-    for feature in _list_features():
+    features = _list_features()
+    if len(features) == 0:
+        return "There is no features on this project."
+    for feature in features:
         result.append(feature.summary())
 
     if len(result) == 0:
@@ -200,7 +207,10 @@ def summarize_features_in_tables() -> str:
     Returns the summaries of all features in a table format.
     '''
     result: list[str] = []
-    for feature in _list_features():
+    features = _list_features()
+    if len(features) == 0:
+        return "There is no features on this project."
+    for feature in features:
         result.append(feature.table_summary())
     
     if len(result) == 0:
@@ -219,7 +229,10 @@ def list_features() -> str:
     list of feature identifiers.
     '''
     result: list[str] = []
-    for feature in _list_features():
+    features = _list_features()
+    if len(features) == 0:
+        return "There is no features on this project."
+    for feature in features:
         result.append(f'- {feature.identifier}')
     return '\n'.join(result)
 
@@ -235,7 +248,9 @@ def feature_tree() -> str:
         'feature is used multiple times, it may be shown in some places with '
         'ellipsis ("...") at the end to avoid redundancy.\n\n']
     features = _list_features() + _list_feature_rules()
-    
+    if len(features) == 0:
+        return "There is no features or feature rules on this project."
+
     namespace_ratings: dict[str, int] = defaultdict(int)
     for feature in features:
         if ':' not in feature.identifier:
