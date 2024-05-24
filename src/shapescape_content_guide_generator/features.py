@@ -299,7 +299,10 @@ def feature_tree() -> str:
         for child in parent_child_map[identifier]:
             log_feature(child, result, depth + 1)
 
-    for parent in parent_child_map:
+    # Copy of the keys prevents runtime error when the dict is accessed thus
+    # changing its size (because of the use of the defaultdict which
+    # automatically adds the key to the dict).
+    for parent in [*parent_child_map.keys()]:
         partial_result: list[str] = []
         log_feature(parent, partial_result)
         if len(partial_result) > 0:
