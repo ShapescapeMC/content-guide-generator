@@ -5,6 +5,15 @@ You can read more about this tool in the [documentation](docs/README.md)
 
 
 # Changelog
+## 1.7.3
+Added support for item tags in recipes.
+
+## 1.7.2
+Fixed the crashes of the feature_tree function.
+
+## 1.7.1
+The feature/feature_rule summaries will return a message that says that the project doesn't have features/feature rules if there is no fr or f on the project.
+
 ## 1.7.0
 Added 6 new functions for summarizing features and feature rules: `list_features()`, `summarize_features()`, `summarize_features_in_tables()`, `list_feature_rules()`, `summarize_feature_rules()`, `summarize_feature_rules_in_tables()` and `feature_tree()`.
 

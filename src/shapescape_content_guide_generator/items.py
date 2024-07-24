@@ -709,21 +709,12 @@ def _list_craftable_items() -> dict[str, list[str]]:
     recipes_path = AppConfig.get().bp_path / 'recipes'
     result: dict[str, list[str]] = defaultdict(list)
     for recipe_path in recipes_path.rglob("*.json"):
-        the_chosen_one = False
-        if recipe_path.as_posix() == 'behavior_packs/0/recipes/cb/quartz_bricks_bannister_stair_north.recipe.json':
-            the_chosen_one = True
         try:
             recipe = load_recipe(recipe_path)
         except InvalidRecipeException as e:
             print_error(
                 f"Failed to load recipe form: "
                 f"{recipe_path.as_posix()}")
-            if the_chosen_one:
-                raise Exception(
-                    f"Failed to load recipe form: "
-                    f"{recipe_path.as_posix()}"
-                    f"{e}"
-                )
             continue
         if isinstance(recipe, RecipeCrafting):
             recipe_text = (
