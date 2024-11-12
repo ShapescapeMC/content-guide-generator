@@ -5,6 +5,13 @@ You can read more about this tool in the [documentation](docs/README.md)
 
 
 # Changelog
+
+## 1.7.5
+Fixed formatting not correctly applying.
+
+## 1.7.4
+Updated formatting for "empty category" messages and updated formatting for items summaries.
+
 ## 1.7.3
 Added support for item tags in recipes.
 
