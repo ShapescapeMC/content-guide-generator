@@ -376,7 +376,10 @@ class ItemProperties(NamedTuple):
         '''
         Returns the summary of the item.
         '''
-        result: list[str] = [f"##### {self.identifier}"]
+
+        display_name = self.identifier.split(":")[1].replace("_", " ").title()
+        result: list[str] = [f"##### {display_name}"]
+        result.append(f"`/give @s {self.identifier}`")
         if self.description != "":
             result.append(f"{self.description}")
 
