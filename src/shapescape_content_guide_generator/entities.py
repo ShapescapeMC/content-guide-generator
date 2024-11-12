@@ -240,7 +240,7 @@ def summarize_entities(
             continue
         result.append(entity.entity_summary())
     if len(result) == 0:
-        return "This category doesn't have any entities."
+        return "**This category doesn't have any entities.**"
     return '\n'.join(result)
 
 def summarize_entities_in_tables(
@@ -278,7 +278,7 @@ def summarize_entities_in_tables(
             continue
         result.append(entity.entity_table_summary())
     if len(result) == 0:
-        return "This category doesn't have any entities."
+        return "**This category doesn't have any entities.**"
     return '\n'.join(
         [
             "| Entity | Description | Locations |",

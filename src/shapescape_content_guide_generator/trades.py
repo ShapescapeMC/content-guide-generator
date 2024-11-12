@@ -243,7 +243,7 @@ def summarize_trades(
             continue
         result.append(trade.trade_summary())
     if len(result) == 0:
-        return "No trades found."
+        return "**No trades found.**"
     return "\n".join(result)
 
 

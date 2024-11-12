@@ -145,12 +145,12 @@ def summarize_feature_rules() -> str:
     result: list[str] = []
     feature_rules = _list_feature_rules()
     if len(feature_rules) == 0:
-        return "There is no feature rules on this project."
+        return "**There are no feature rules in this project.**"
     for feature_rule in feature_rules:
         result.append(feature_rule.summary())
 
     if len(result) == 0:
-        return "There is no feature rules on this project."
+        return "**There are no feature rules in this project.**"
     return '\n'.join(result)
 
 def summarize_feature_rules_in_tables() -> str:
@@ -160,12 +160,12 @@ def summarize_feature_rules_in_tables() -> str:
     result: list[str] = []
     feature_rules = _list_feature_rules()
     if len(feature_rules) == 0:
-        return "There is no feature rules on this project."
+        return "**There are no feature rules in this project.**"
     for feature_rule in feature_rules:
         result.append(feature_rule.table_summary())
     
     if len(result) == 0:
-        return "There is no feature rules on this project."
+        return "**There are no feature rules in this project.**"
     return '\n'.join(
         [
             "| Item | Description | Places feature |",
@@ -182,7 +182,7 @@ def list_feature_rules() -> str:
     result: list[str] = []
     feature_rules = _list_feature_rules()
     if len(feature_rules) == 0:
-        return "There is no feature rules on this project."
+        return "**There are no feature rules in this project.**"
     for feature_rule in feature_rules:
         result.append(f'- {feature_rule.identifier}')
     return '\n'.join(result)
@@ -194,12 +194,12 @@ def summarize_features() -> str:
     result: list[str] = []
     features = _list_features()
     if len(features) == 0:
-        return "There is no features on this project."
+        return "**There are no features in this project.**"
     for feature in features:
         result.append(feature.summary())
 
     if len(result) == 0:
-        return "There is no features on this project."
+        return "**There are no features in this project.**"
     return '\n'.join(result)
 
 def summarize_features_in_tables() -> str:
@@ -209,12 +209,12 @@ def summarize_features_in_tables() -> str:
     result: list[str] = []
     features = _list_features()
     if len(features) == 0:
-        return "There is no features on this project."
+        return "**There are no features in this project.**"
     for feature in features:
         result.append(feature.table_summary())
     
     if len(result) == 0:
-        return "There is no features on this project."
+        return "**There are no features in this project.**"
     return '\n'.join(
         [
             "| Item | Description | Places features |",
@@ -231,7 +231,7 @@ def list_features() -> str:
     result: list[str] = []
     features = _list_features()
     if len(features) == 0:
-        return "There is no features on this project."
+        return "**There are no features in this project.**"
     for feature in features:
         result.append(f'- {feature.identifier}')
     return '\n'.join(result)
@@ -249,7 +249,7 @@ def feature_tree() -> str:
         'ellipsis ("...") at the end to avoid redundancy.\n\n']
     features = _list_features() + _list_feature_rules()
     if len(features) == 0:
-        return "There is no features or feature rules on this project."
+        return "**There are no features or feature rules in this project.**"
 
     namespace_ratings: dict[str, int] = defaultdict(int)
     for feature in features:
