@@ -379,10 +379,10 @@ class ItemProperties(NamedTuple):
 
         display_name = self.identifier.split(":")[1].replace("_", " ").title()
         result: list[str] = [f"##### {display_name}"]
-        result.append(f"`/give @s {self.identifier}`")
+        result.append(f"`/give @s {self.identifier}`\n")
         if self.description != "":
+            result.append("###### **Description:**")
             result.append(f"{self.description}")
-
         if len(self.recipe_patterns) > 0:
             result.extend(self.recipe_patterns)
         if len(self.dropping_entities) > 0:
