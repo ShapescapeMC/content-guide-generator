@@ -1,7 +1,7 @@
 # Description
-This repository contains a Python module used by the [Content Guide Generator Regolith filters](https://github.com/Shapescape-Software/content_guide_generator). The module can be used independently, however it is recommended to use it as a Regolith filter.
+This repository contains a Python module used by the [Content Guide Generator Regolith filters](https://github.com/ShapescapeMC/Shapescape-Content-Guide-Generator). The module can be used independently, however it is recommended to use it as a Regolith filter.
 
-You can read more about this tool in the [documentation](docs/README.md)
+You can read more about this tool in the documentation of the Regolith filter.
 
 
 # Changelog
