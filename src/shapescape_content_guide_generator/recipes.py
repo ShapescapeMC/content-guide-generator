@@ -45,12 +45,18 @@ class RecipeKey:
         if not isinstance(json_data, dict):
             raise InvalidRecipeException(
                 "Recipe 'key' instance is not a dict or str")
-        if not "item" in json_data:
+        if not "item" in json_data and not "tag" in json_data:
             raise InvalidRecipeException(
-                "Recipe 'key' instance property is missing 'item'")
+                "Recipe 'key' instance property is missing 'item' or 'tag'")
+        
+        # It is assumed to be an item, if somehow it has both properties
+        self.is_item_tag = not "item" in json_data
+        if self.is_item_tag:
+            json_data = {"item": json_data["tag"]}
+
         if not isinstance(json_data["item"], str):
             raise InvalidRecipeException(
-                "Recipe 'key' property 'item' is not a string")
+                "Recipe 'key' property 'item'/'tag' is not a string")
         recipe_key_item = json_data["item"]
         if match := NEW_SPAWN_EGG_REGEX.fullmatch(recipe_key_item):
             self.item = "minecraft:spawn_egg"
@@ -98,7 +104,11 @@ class RecipeKey:
         Returns the true name of the item. In most cases it's the same as
         self.item, but for spawn eggs it's
         '<namespace>:<entity_name>_spawn_egg'
+        if it's a tag, it's '<tag> (tag)'
         '''
+        if self.is_item_tag:  # Return item tags
+            return f'{self.item} (tag)'
+
         if not isinstance(self.data, ActorIdWildcard):
             return self.item
         else:
@@ -107,8 +117,11 @@ class RecipeKey:
     def get_full_item_name(self)-> str:
         '''
         Gets the full name of the item including the data value for recipes in
-        the content guide. Format: '<namespace>:<item>:<data>'
+        the content guide. Format: '<namespace>:<item>:<data>'.
+        If it's a tag, it's '<tag> (tag)'
         '''
+        if self.is_item_tag:
+            return f'{self.item} (tag)'
         if isinstance(self.data, int):
             pattern = re.compile(r"(.+)(:[0-9]+)")
             if match := pattern.fullmatch(self.item):
@@ -318,6 +331,9 @@ Recipe = Union[RecipeCrafting, RecipeFurnace, RecipeBrewing]
 
 def load_recipe(recipe_path: Path) -> Recipe:
     walker = load_jsonc(recipe_path)
+    if not isinstance(walker.data, dict):
+        raise InvalidRecipeException("Recipe file is not a dict")
+
     if "minecraft:recipe_shaped" in walker.data:
         return RecipeCrafting(walker.data)
     elif "minecraft:recipe_shapeless" in walker.data:

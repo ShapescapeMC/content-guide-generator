@@ -1,11 +1,41 @@
 # Description
-This is a repository for the Content Guide generator. It is a Python module which can be used independently, however
-it is recommended to use it as a Regolith filter. See: https://github.com/ShapescapeMC/regolith-filters
+This repository contains a Python module used by the [Content Guide Generator Regolith filters](https://github.com/Shapescape-Software/content_guide_generator). The module can be used independently, however it is recommended to use it as a Regolith filter.
 
 You can read more about this tool in the [documentation](docs/README.md)
 
 
 # Changelog
+
+## 1.7.5
+Fixed formatting not correctly applying.
+
+## 1.7.4
+Updated formatting for "empty category" messages and updated formatting for items summaries.
+
+## 1.7.3
+Added support for item tags in recipes.
+
+## 1.7.2
+Fixed the crashes of the feature_tree function.
+
+## 1.7.1
+The feature/feature_rule summaries will return a message that says that the project doesn't have features/feature rules if there is no fr or f on the project.
+
+## 1.7.0
+Added 6 new functions for summarizing features and feature rules: `list_features()`, `summarize_features()`, `summarize_features_in_tables()`, `list_feature_rules()`, `summarize_feature_rules()`, `summarize_feature_rules_in_tables()` and `feature_tree()`.
+
+## 1.6.0
+Added new function `summarize_trades()` which generates a human-readable summary of all of the trades in the game and an information about the entities that use them.
+
+## 1.5.1
+The recipe image generator can accept shapeless recipes which define ingredients as a dictionary.
+
+## 1.5.0
+The `summerize_...` functions generate different messages when there is no data to summarize. They say that there is missing data.
+
+## 1.4.4
+Added a function for outputing data to multiple files. This is used with the combination of the "output_paths" property of the Regolith filter which uses this library.
+
 ## 1.4.3
 Added `"block_entity"` entity category.
 

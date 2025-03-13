@@ -12,8 +12,11 @@ from json import JSONDecodeError
 import json
 
 from sqlite_bedrock_packs.better_json_tools import load_jsonc, SKIP_LIST
-from sqlite_bedrock_packs import EasyQuery
-from sqlite_bedrock_packs.wrappers import Entity
+from sqlite_bedrock_packs import (
+    yield_from_easy_query, Entity, LootTable,
+    LootTableItemSpawnEggReferenceField, BpItem,
+    TradeTable, TradeTableItemSpawnEggReferenceField
+)
 
 # Local imports
 from .utils import filter_paths
@@ -373,17 +376,20 @@ class ItemProperties(NamedTuple):
         '''
         Returns the summary of the item.
         '''
-        result: list[str] = [f"### {self.identifier}"]
-        if self.description != "":
-            result.append(f"{self.description}")
 
+        display_name = self.identifier.split(":")[1].replace("_", " ").title()
+        result: list[str] = [f"##### {display_name}"]
+        result.append(f"`/give @s {self.identifier}`\n")
+        if self.description != "":
+            result.append("###### **Description:**")
+            result.append(f"{self.description}")
         if len(self.recipe_patterns) > 0:
             result.extend(self.recipe_patterns)
         if len(self.dropping_entities) > 0:
-            result.append("#### **Dropped by:**")
+            result.append("###### **Dropped by:**")
             result.extend([f'- {e}' for e in self.dropping_entities])
         if len(self.trading_entities) > 0:
-            result.append("#### **Traded by:**")
+            result.append("###### **Traded by:**")
             result.extend([f'- {e}' for e in self.trading_entities])
         return '\n'.join(result) + "\n"
 
@@ -426,7 +432,7 @@ def summarize_items(
             continue
         result.append(item.item_summary())
     if len(result) == 0:
-        return "This category doesn't have any items."
+        return "**This category doesn't have any items.**"
     return '\n'.join(result)
 
 def summarize_items_in_tables(
@@ -459,7 +465,7 @@ def summarize_items_in_tables(
             continue
         result.append(item.item_table_summary())
     if len(result) == 0:
-        return "This category doesn't have any items."
+        return "**This category doesn't have any items.**"
     return '\n'.join(
         [
             "| Item | Description |",
@@ -527,7 +533,7 @@ def summarize_blocks(
             continue
         result.append(block.item_summary())
     if len(result) == 0:
-        return "This category doesn't have any blocks."
+        return "**This category doesn't have any blocks.**"
     return '\n'.join(result)
 
 def summarize_blocks_in_tables(
@@ -560,7 +566,7 @@ def summarize_blocks_in_tables(
             continue
         result.append(block.item_table_summary())
     if len(result) == 0:
-        return "This category doesn't have any blocks."
+        return "**This category doesn't have any blocks.**"
     return '\n'.join(
         [
             "| Block | Description |",
@@ -626,7 +632,7 @@ def summarize_spawn_eggs(
             continue
         result.append(item.item_summary())
     if len(result) == 0:
-        return "This category doesn't have any spawn eggs."
+        return "**This category doesn't have any spawn eggs.**"
     return '\n'.join(result)
 
 def summarize_spawn_eggs_in_tables(
@@ -659,7 +665,7 @@ def summarize_spawn_eggs_in_tables(
             continue
         result.append(item.item_table_summary())
     if len(result) == 0:
-        return "This category doesn't have any spawn eggs."
+        return "**This category doesn't have any spawn eggs.**"
     return '\n'.join(
         [
             "| Item | Description |",
@@ -706,25 +712,16 @@ def _list_craftable_items() -> dict[str, list[str]]:
     recipes_path = AppConfig.get().bp_path / 'recipes'
     result: dict[str, list[str]] = defaultdict(list)
     for recipe_path in recipes_path.rglob("*.json"):
-        the_chosen_one = False
-        if recipe_path.as_posix() == 'behavior_packs/0/recipes/cb/quartz_bricks_bannister_stair_north.recipe.json':
-            the_chosen_one = True
         try:
             recipe = load_recipe(recipe_path)
         except InvalidRecipeException as e:
             print_error(
                 f"Failed to load recipe form: "
                 f"{recipe_path.as_posix()}")
-            if the_chosen_one:
-                raise Exception(
-                    f"Failed to load recipe form: "
-                    f"{recipe_path.as_posix()}"
-                    f"{e}"
-                )
             continue
         if isinstance(recipe, RecipeCrafting):
             recipe_text = (
-                f"#### **Crafting recipe:**\n"
+                f"###### **Crafting recipe:**\n"
                 "**Ingredients:**\n")
             for k, v in recipe.keys.items():
                 recipe_text += f"- {v.get_full_item_name()} as {k}\n"
@@ -733,14 +730,14 @@ def _list_craftable_items() -> dict[str, list[str]]:
             result[recipe.result.get_true_item_name()].append(recipe_text)
         if isinstance(recipe, RecipeFurnace):
             recipe_text = (
-                "#### **Furnace recipe:**\n"
+                "###### **Furnace recipe:**\n"
                 f"- Input: {recipe.input.get_full_item_name()}\n"
                 f"- Output: {recipe.output.get_full_item_name()}\n"
             )
             result[recipe.output.get_true_item_name()].append(recipe_text)
         if isinstance(recipe, RecipeBrewing):
             recipe_text = (
-                "#### **Brewing recipe:**\n"
+                "###### **Brewing recipe:**\n"
                 f"- Input: {recipe.input.get_full_item_name()}\n"
                 f"- Reagent: {recipe.reagent.get_full_item_name()}\n"
                 f"- Output: {recipe.output.get_full_item_name()}\n"
@@ -755,25 +752,20 @@ def list_dropping_entities(item_name: str) -> list[str]:
     db = get_db()
     result: list[str] = []
     if item_name.endswith("_spawn_egg"):
-        q = EasyQuery.build(
-            db, "LootTable", "LootTableItemSpawnEggReferenceField",
-            "Entity",
-            where=(
-                "LootTableItemSpawnEggReferenceField.spawnEggIdentifier = "
-                f"'{item_name}'")
-        )
-        for _, _, entity in q.yield_wrappers():
-            entity = cast(Entity, entity)
-            if entity.identifier is None:
+        for _, _, entity in yield_from_easy_query(
+                db, LootTable, LootTableItemSpawnEggReferenceField, Entity,
+                where=[
+                    "LootTableItemSpawnEggReferenceField.spawnEggIdentifier = "
+                    f"'{item_name}'"
+                ]):
+            if entity.identifier is None:  # type: ignore
                 continue
             result.append(entity.identifier)
     else:
-        q = EasyQuery.build(
-            db, 'BpItem', 'LootTable', 'Entity', 
-            where=[f"BpItem.identifier = '{item_name}'"])
-        for _, _, entity in q.yield_wrappers():
-            entity = cast(Entity, entity)
-            if entity.identifier is None:
+        for _, _, entity in yield_from_easy_query(
+                db, BpItem, LootTable, Entity,
+                where=[f"BpItem.identifier = '{item_name}'"]):
+            if entity.identifier is None:  # type: ignore
                 continue
             result.append(entity.identifier)
     return result
@@ -785,25 +777,20 @@ def list_trading_entities(item_name: str) -> list[str]:
     db = get_db()
     result: list[str] = []
     if item_name.endswith("_spawn_egg"):
-        q = EasyQuery.build(
-            db, "TradeTable", "TradeTableItemSpawnEggReferenceField",
-            "Entity",
-            where=(
-                "TradeTableItemSpawnEggReferenceField.spawnEggIdentifier = "
-                f"'{item_name}'")
-        )
-        for _, _, entity in q.yield_wrappers():
-            entity = cast(Entity, entity)
-            if entity.identifier is None:
+        for _, _, entity in yield_from_easy_query(
+                db, TradeTable, TradeTableItemSpawnEggReferenceField, Entity,
+                where=[
+                    "TradeTableItemSpawnEggReferenceField.spawnEggIdentifier = "
+                    f"'{item_name}'"
+                ]):
+            if entity.identifier is None:  # type: ignore
                 continue
             result.append(entity.identifier)
     else:
-        q = EasyQuery.build(
-            db, 'BpItem', 'TradeTable', 'Entity',
-            where=[f"BpItem.identifier = '{item_name}'"])
-        for _, _, entity in q.yield_wrappers():
-            entity = cast(Entity, entity)
-            if entity.identifier is None:
+        for _, _, entity in yield_from_easy_query(
+                db, BpItem, TradeTable, Entity,
+                where=[f"BpItem.identifier = '{item_name}'"]):
+            if entity.identifier is None:  # type: ignore
                 continue
             result.append(entity.identifier)
     return result

@@ -1,56 +1,53 @@
 <!-- doctree start -->
+Table of contents:
 - [About the documentation](/docs/README.md)
 - [Arguments Types](/docs/arguments_types.md)
 - [Custom properties](/docs/custom_properties.md)
 - [Generator functions](/docs/generator_functions.md)
 - [Tutorial](/docs/tutorial.md)
+- [Writing the Documentation](/docs/writing_the_documentation.md)
+
+In this article you can read about:
+- [`completion_guide()`.](#completion_guide)
+- [`warp()`](#warp)
+- [`insert()`](#insert)
+- [`list_entities()`, `summarize_entities()` and `summarize_entities_in_tables()`](#list_entities-summarize_entities-and-summarize_entities_in_tables)
+- [`list_items()`, `summarize_items()` and `summarize_items_in_tables()`](#list_items-summarize_items-and-summarize_items_in_tables)
+- [`list_spawn_eggs()`, `summarize_spawn_eggs()` and `summarize_spawn_eggs_in_tables()`](#list_spawn_eggs-summarize_spawn_eggs-and-summarize_spawn_eggs_in_tables)
+- [`list_blocks()`, `summarize_blocks()` and `summarize_blocks_in_tables()` functions](#list_blocks-summarize_blocks-and-summarize_blocks_in_tables-functions)
+- [`sound_definitions()`](#sound_definitions)
+- [`summarize_trades()`](#summarize_trades)
+- [`list_features()` `summarize_features()` and `summarize_features_in_tables()` functions](#list_features-summarize_features-and-summarize_features_in_tables-functions)
+- [`list_feature_rules()` `summarize_feature_rules()` and `summarize_feature_rules_in_tables()` functions](#list_feature_rules-summarize_feature_rules-and-summarize_feature_rules_in_tables-functions)
+- [`feature_tree()`](#feature_tree)
 <!-- doctree end -->
 # Generator functions
 
-Generator functions are the functions that you can use to insert text into the
-documentation. To do that, use the `:generate:` tag. The syntax is as follows:
+Generator functions are the functions you can use to insert text into the documentation. To do this, use the `:generate:` tag. The syntax is as follows
 ```
 :generate: <function_name>([arguments])
 
 - <function_name> - the name of the function
-- [arguments] - list of the arguments. The arguments are separated and must be
-  written in the same order as in the function's documentation. Some functions
-  let you skip some arguments at the end of the list. If argument is optional,
-  it has "[OPTIONAL]" tag added to its description.
+- [arguments] - the list of arguments. The arguments are separated and must be written in the same order as in the function's documentation. Some functions allow you to skip some arguments at the end of the list. If an argument is optional, the "[OPTIONAL]" tag is added to its description.
 ```
 
-The tag and the functions are replaced with the text that the function returns.
+The tag and functions are replaced by the text that the function returns.
 
-> **WARNING**
->
-> This page refers to arguments of the functions using their data types or short
-> descriptive words that tell what arguments are (like glob pattern). If you
-> don't know what that means, you should read the
-> [Arguments Types](/docs/arguments_types.md)
+> **Note** This page refers to function arguments by their data types, or by short descriptive words that tell you what they are (like glob pattern). If you don't know what that means, you should read the [Arguments Types](/docs/arguments_types.md)
 
-> **WARNING**
->
-> Some of the functions use "custom entity properties" or "custom item properties".
-> You can read about them in the [Custom Properties](/docs/custom_properties.md)
+> **Note** Some of the functions use "custom entity properties" or "custom item properties". You can read about them in the [Custom Properties](/docs/custom_properties.md)
 
-# `completion_guide()`
-Generates the completion guide for the map based on the completion guide
-functions. The function names must follow the pattern `<step>_<title>`. Where
-`<step>` is an integer to determine the order of the steps and `<title>` is the
-title of the step. The `<title>` should be written in snake_case. The function
-will change that to Title Case in the output.
-## Syntax
+## `completion_guide()`.
+Generates the completion guide for the map based on the completion guide functions. Function names must follow the pattern `<step>_<title>`. Where `<step>` is an integer specifying the order of the steps and `<title>` is the title of the step. The `<title>` should be written in snake_case. The function will change this to title_case in the output.
+
+**Syntax**
 ```
-:generate: completion_guide(search_patterns, exclude_patterns)
+generate: completion_guide(search_patterns, exclude_patterns)
 ```
 
 **Properties:**
-- `search_patterns` - glob pattern or list of glob patterns to match files to
-  be included in the completion guide.
-- `exclude_patterns [OPTIONAL]` -  glob pattern or list of glob patterns to match the files
-  to be excluded from the completion guide (even if they match the
-  `search_patterns`). The value of this property is `null` by default.
-  You don't have to specify it if you don't want to exclude any files.
+- `search_patterns` - glob pattern or list of glob patterns to match files to include in the completion guide.
+- `exclude_patterns [OPTIONAL]` - glob pattern or list of glob patterns to exclude from the completion guide (even if they match the `search_patterns`). The value of this property is `null` by default. You don't need to specify it if you don't want to exclude any files.
 
 **Example**
 
@@ -73,28 +70,23 @@ Output
 > ...
 
 
-# `warp()`
-Generates descriptions of places that can be accessed using warp functions.
-The content of the matching files should follow the pattern:
+## `warp()`
+Generates descriptions of locations that can be accessed using warp functions. The contents of the matching files should follow this pattern:
 ```
 # <description using comments (can have multiple lines)>
 <tp command>
 ```
-The `warp()` function extarts the coordinates from the `tp` command and adds
-the description.
-## Syntax
+The `warp()` function extracts the coordinates from the `tp` command and adds the description.
+
+**Syntax**
 ```
 :generate: warp(search_patterns, exclude_patterns)
 ```
 
 
 **Properties:**
-- `search_patterns` - glob pattern or list of glob patterns to match files to
-  be included.
-- `exclude_patterns [OPTIONAL]` - glob pattern or list of glob patterns to
-  match the files to be excluded (even if they match the `search_patterns`).
-  The value of this property is `null` by default. You don't have to specify
-  it if you don't want to exclude any files.
+- `search_patterns` - glob pattern or list of glob patterns to match against files to include.
+- `exclude_patterns [OPTIONAL]` - glob pattern or list of glob patterns to match against files to exclude (even if they match the `search_patterns`). The value of this property is `null` by default. You don't need to specify it if you don't want to exclude any files.
 
 **Example:**
 
@@ -111,9 +103,10 @@ Output
 
 
 
-# `insert()`
+## `insert()`
 Inserts an external MD file into the `TEMPLATE.md` file.
-## Syntax
+
+**Syntax**
 ```
 :generate: insert(path)
 ```
@@ -130,15 +123,15 @@ Output
 
 > The content of the mechanics.md file
 
-# `list_entities()`, `summarize_entities()` and `summarize_entities_in_tables()`
-The functions that list entities using their identifiers. Some of them provide
-some additional information based on custom entity properties.
+## `list_entities()`, `summarize_entities()` and `summarize_entities_in_tables()`
+The functions that list entities by their identifiers. Some of them provide additional information based on custom entity properties.
 
-- `list_entities()` is the simplest function. It only lists the identifiers
-- `summarize_entities()` writes summary in a formatted text form
-- `summarize_entities_in_tables()` writes summary in a table form
+- `list_entities()` is the simplest. It just lists the identifiers.
+- `summarize_entities()` writes a summary in formatted text form.
+- `summarize_entities_in_tables()` writes the summary in a table form.
 
-## Syntax
+
+**Syntax**
 ```
 :generate: list_entities(search_patterns, exclude_patterns, categories)
 ```
@@ -149,20 +142,9 @@ some additional information based on custom entity properties.
 :generate: summarize_entities_in_tables(search_patterns, exclude_patterns, categories)
 ```
 **Properties:**
-- `search_patterns` - glob pattern or list of glob patterns to match files to
-  be included.
-- `exclude_patterns [OPTIONAL]` - glob pattern or list of glob patterns to
-  match the files to be excluded (even if they match the `search_patterns`).
-  The value of this property is `null` by default. You don't have to specify
-  it if you don't want to exclude any files.
- - `categories [OPTIONAL]` - the categories of the entities to be included.
-   The category is a cusom property of the entity added to the "description"
-   filed in the entity behavior. Category is a string. You can pick one of the
-   following categories: `"character"`, `"trader"`,
-   `"non_player_facing_utility"`, `"player_facing_utility"`, `"projectile"`,
-   `"creature"`, `"decoration"`, `"interactive_entity"`. You can read more
-   about the categories in the [Custom Properties](/docs/custom_properties.md)
-   page. By default, all categories are included.
+- `search_patterns` - glob pattern or list of glob patterns to match files to include.
+- `exclude_patterns [OPTIONAL]` - glob pattern or list of glob patterns to match files to exclude (even if they match the `search_patterns`). The value of this property is null by default. You don't need to specify it if you don't want to exclude any files.
+ - `categories [OPTIONAL]` - the categories of entities to include. The category is a custom property of the entity, added to the description file in the entity behaviour. Category is a string. You can choose from categories listed on the [Custom Properties](/docs/custom_properties.md#category) documentation page. The default value is `null`, which means that all entities are included.
 
 **Example list_entities()**
 
@@ -210,18 +192,14 @@ Output
 > | shapescape:potato_bullet_turret | A projectile used by the Potato Turret. | N/A |
 > ...
 
-# `list_items()`, `summarize_items()` and `summarize_items_in_tables()`
-The functions that list entities using their identifiers. Some of them provide
-some additional information based on custom item properties.
+## `list_items()`, `summarize_items()` and `summarize_items_in_tables()`
+The functions that list items by their identifiers. Some of them provide some additional information based on custom item properties.
 
-- `list_items()` is the simplest function. It only lists the identifiers
-- `summarize_items_in_tables()` writes summary in a table form
-- `summarize_items()` writes summary in a formatted text form. This format is
-   the most detailed one. It contains the list of entities that drop the item,
-   a list of entities that trade using this item and a list of recipes that
-   create this item.
+- `list_items()` is the simplest. It just lists the identifiers.
+- `summarize_items_in_tables()` writes the summary in table form.
+- `summarize_items()` writes the summary in a formatted text form. This is the most detailed format. It contains the list of entities that drop the item, a list of entities that trade with the item, and a list of recipes that create the item.
 
-## Syntax
+**Syntax**
 ```
 :generate: list_items(search_patterns, exclude_patterns ,player_facing)
 ```
@@ -232,17 +210,10 @@ some additional information based on custom item properties.
 :generate: summarize_items_in_tables(search_patterns, exclude_patterns ,player_facing)
 ```
 **Properties:**
-- `search_patterns` - glob pattern or list of glob patterns to match files to
-  be included.
-- `exclude_patterns [OPTIONAL]` - glob pattern or list of glob patterns to
-  match the files to be excluded (even if they match the `search_patterns`).
-  The value of this property is `null` by default. You don't have to specify
-  it if you don't want to exclude any files.
- - `player_facing [OPTIONAL]` - a string that decides if player-facing,
-   non-player-facing or both types of items should be included. You can pick
-   one of the following values: `"player_facing"`, `"non_player_facing"`,
-   `"all"`. By default `"all"` is used which means that both types of items
-    are included.
+- `search_patterns` - glob pattern or list of glob patterns to match files to include.
+- `exclude_patterns [OPTIONAL]` - glob pattern or list of glob patterns to match files to exclude (even if they match the `search_patterns`). The value of this property is null by default. You don't need to specify it if you don't want to exclude any files.
+ - `player_facing [OPTIONAL]` - a string that determines whether player-facing, non-player-facing or both types of items should be included. You can choose one of the following values `"player_facing"`, `"non_player_facing"`, `"all"`. The default is `all`, which means that both types of items are included.
+
 
 **Example list_items()**
 
@@ -305,27 +276,17 @@ Output
 > | shapescape:flame_thrower | The Flameinator weapon. Sets enemies on fire. It can be purchased from the weapon shop. |
 > ...
 
-# `list_spawn_eggs()`, `summarize_spawn_eggs()` and `summarize_spawn_eggs_in_tables()`
-These functions are analogous to `list_items()`, `summarize_items()` and
-`summarize_items_in_tables()`. They print data in the same format. The only
-difference is that they expect paths to the entity files instead of the item
-files. Based on the entity files, they generate information about the spawn
-eggs of the entities.
+## `list_spawn_eggs()`, `summarize_spawn_eggs()` and `summarize_spawn_eggs_in_tables()`
+These functions are analogous to `list_items()`, `summarize_items()` and `summarize_items_in_tables()`. They all print data in the same format. The only difference is that they expect paths to the entity files instead of the item files. Based on the entity files they generate information about the spawn eggs of the entities.
 
-# `list_blocks()`, `summarize_blocks()` and `summarize_blocks_in_tables()`
-These functions are analogous to `list_items()`, `summarize_items()` and
-`summarize_items_in_tables()`. They print data in the same format. The only
-difference is that they expect paths to the block files instead of the item
-files. Based on the block files, they generate information about the custom
-blocks.
+## `list_blocks()`, `summarize_blocks()` and `summarize_blocks_in_tables()` functions
+These functions are analogous to `list_items()`, `summarize_items()` and `summarize_items_in_tables()`. They all print data in the same format. The only difference is that they expect paths to the block files instead of the item files. Based on the block files, they generate information about the custom blocks.
 
 
-# `sound_definitions()`
-Generates a list of sound definitions from the sound_definitions.json file.
-The list includes "friendly names" and the actual identifiers. The friendly
-names are based on the identifiers. This function takes no properties.
+## `sound_definitions()`
+Creates a list of sound definitions from the sound_definitions.json file. The list contains "friendly names" and the actual identifiers. The friendly names are based on the identifiers. This function does not take any properties.
 
-## Syntax
+**Syntax**
 ```
 :generate: sound_definitions()
 ```
@@ -346,3 +307,63 @@ Output
 > - Game state - Level won (game_state.level_won)
 > - Event - Wave complete (event.wave_complete)
 > ...
+
+## `summarize_trades()`
+Creates a summary of all of the trades defined in the behavior pack. The summary contains simplified versions of the trade definitions and a list of entities that use each trade.
+
+**Syntax**
+```
+:generate: summarize_trades(search_patterns, exclude_patterns)
+```
+**Properties:**
+- `search_patterns` - glob pattern or list of glob patterns to match files to include.
+- `exclude_patterns [OPTIONAL]` - glob pattern or list of glob patterns to match files to exclude (even if they match the `search_patterns`). The value of this property is null by default. You don't need to specify it if you don't want to exclude any files.
+
+**Example**
+
+Input
+
+> :generate: summarize_trades("**/*.json", null)
+
+Output
+
+> ## Trade: ancient_builder/ancient_builder.trade.json
+> #### Traded by:
+> - shapescape:ancient_builder
+> #### Content
+> ```
+> Tier 1 trades (Total EXP required: 0):
+> ======================================
+> 
+> Group 1 - Selects 1 of following trades:
+> ----------------------------------------
+> 
+> - Gives 16⨯shapescape:fur_block_orange FOR 4⨯minecraft:emerald
+> - Gives 16⨯shapescape:fur_block_green FOR 4⨯minecraft:emerald
+> - Gives 16⨯shapescape:fur_block_blue FOR 4⨯minecraft:emerald
+> - Gives 16⨯shapescape:fur_block_purple FOR 4⨯minecraft:emerald
+> 
+> Group 2 - Selects 1 of following trades:
+> ----------------------------------------
+> 
+> - Gives 4⨯shapescape:raw_primal_meat & 4⨯minecraft:dirt FOR 1⨯minecraft:emerald & 1⨯minecraft:gold
+> 
+> Group 3 - Selects 1 of following trades:
+> ----------------------------------------
+> 
+> - Gives 2⨯shapescape:ancient_shard FOR 1⨯minecraft:emerald
+> - Gives 7⨯shapescape:raw_primal_meat FOR 1⨯minecraft:emerald
+
+## `list_features()`, `summarize_features()` and `summarize_features_in_tables()` functions
+The feature summaries don't take any arguments. They list all the features defined in the behavior pack. The summaries contain the feature identifiers, the descriptions and the list of features that are placed by the described feature.
+
+## `list_feature_rules()`, `summarize_feature_rules()` and `summarize_feature_rules_in_tables()` functions
+The feature rule summaries don't take any arguments. They list all the feature rules defined in the behavior pack. The summaries contain the feature rule identifiers, the descriptions and the list of features that are placed by the described feature rule.
+
+## `feature_tree()`
+Creates a tree of features and feature rules. This is useful to give an overview of how the features are connected to each other. The function does not take any properties.
+feature_tree
+**Syntax**
+```
+:generate: feature_tree()
+```
