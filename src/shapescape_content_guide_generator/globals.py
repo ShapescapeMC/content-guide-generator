@@ -24,7 +24,7 @@ class AppConfig:
     def get() -> AppConfig:
         bp_path = Path("BP")
         rp_path = Path("RP")
-        data_path = Path("data/content_guide_generator")
+        data_path = Path("data/shapescape_content_guide_generator")
         return AppConfig(bp_path, rp_path, data_path)
 @cache
 def get_db():

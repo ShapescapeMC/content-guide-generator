@@ -5,6 +5,8 @@ You can read more about this tool in the documentation of the Regolith filter.
 
 
 # Changelog
+## 1.8.0
+The default data path for the regolith filter is `data/shapescape_content_guide_generator` instead of `data/content_guide_generator` to match the new filter name.
 
 ## 1.7.5
 Fixed formatting not correctly applying.
